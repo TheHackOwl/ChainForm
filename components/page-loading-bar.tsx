@@ -7,7 +7,6 @@ export default function PageLoadingBar() {
         isIndeterminate
         aria-label="Loading..."
         className="w-full"
-        color="success"
         size="sm"
       />
     </div>
