@@ -1,7 +1,9 @@
+export type AnswerType = "text" | "multipleChoice" | "checkboxes";
+
 export enum answerOptionsEnum {
-  TEXT = "0",
-  MULTIPLECHOICE = "1",
-  CHECKBOXES = "2",
+  TEXT = "text",
+  MULTIPLECHOICE = "multipleChoice",
+  CHECKBOXES = "checkboxes",
 }
 
 /**
