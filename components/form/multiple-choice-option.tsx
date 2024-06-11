@@ -16,7 +16,6 @@ export const MultipleChoiceOption: React.FC<MultipleChoiceOptionProps> = ({
   addOption,
 }) => {
   const hanleChange = (index: number, value: string) => {
-    if (value.length == 0) return;
     optionValueChange(index, value);
   };
 

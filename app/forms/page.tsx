@@ -8,6 +8,8 @@ export default function FormsPage() {
       <h1 className={title()}>Froms</h1>
       <Button>
         <Link href="/forms/create">create</Link>
+
+        <Link href="/forms/answer">answer</Link>
       </Button>
     </div>
   );

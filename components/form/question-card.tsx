@@ -1,24 +1,24 @@
 "use client";
 
 import React, { useState, useImperativeHandle, forwardRef } from "react";
-import { Card, CardBody, CardHeader, CardFooter } from "@nextui-org/card";
+import { CardHeader, CardFooter } from "@nextui-org/card";
 import { Input } from "@nextui-org/input";
 import { Select, SelectItem } from "@nextui-org/select";
 import { Switch } from "@nextui-org/switch";
 import { Button } from "@nextui-org/button";
-import clsx from "clsx";
 
 import { TextOption } from "./text-option";
 import { MultipleChoiceOption } from "./multiple-choice-option";
 import { CheckboxesOption } from "./checkboxes-option";
 
+import { FormCardBody } from "@/components/form-ui/form-card-body";
+import { FormCard } from "@/components/form-ui/form-card";
 import { CopyIcon, TrashBinIcon } from "@/components/icons";
 import {
   answerOptions,
   answerOptionsEnum,
   AnswerType,
 } from "@/constants/index";
-import { useFocus } from "@/hooks/index";
 import {
   Question,
   MultipleChoiceQuestion,
@@ -38,7 +38,6 @@ export interface FancyMethods {
 
 export const QuestionCard = forwardRef<FancyMethods, QuestionCardProps>(
   ({ question, index, onCopy, onDelete }, ref) => {
-    const [focuseRef, isFocused] = useFocus<HTMLDivElement>();
     const [questionTitle, setQuestionTitle] = useState<string>(
       question.questionTitle
     );
@@ -54,10 +53,6 @@ export const QuestionCard = forwardRef<FancyMethods, QuestionCardProps>(
 
     const [required, setRequired] = useState(question.required);
 
-    const cardclasses = clsx("p-4  border-l-4", {
-      "border-s-indigo-500": isFocused,
-    });
-
     useImperativeHandle(ref, () => ({
       combinedData,
     }));
@@ -69,6 +64,7 @@ export const QuestionCard = forwardRef<FancyMethods, QuestionCardProps>(
      */
     const typeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
       if (!e.target.value) return;
+
       const type = e.target.value;
 
       setAnswerType(type as AnswerType);
@@ -81,7 +77,6 @@ export const QuestionCard = forwardRef<FancyMethods, QuestionCardProps>(
     const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       const value = event.target.value;
 
-      if (value.length == 0) return;
       setQuestionTitle(value);
     };
 
@@ -97,9 +92,7 @@ export const QuestionCard = forwardRef<FancyMethods, QuestionCardProps>(
         required: required,
       };
 
-      if (answerType == answerOptionsEnum.TEXT) {
-        return returnObj;
-      }
+      if (answerType == answerOptionsEnum.TEXT) return returnObj;
 
       (returnObj as CheckboxesQuestion | MultipleChoiceQuestion).options = [
         ...options,
@@ -139,6 +132,7 @@ export const QuestionCard = forwardRef<FancyMethods, QuestionCardProps>(
       const newOptions = [...options];
 
       newOptions[index] = value;
+
       setOptions(newOptions);
     };
 
@@ -149,8 +143,11 @@ export const QuestionCard = forwardRef<FancyMethods, QuestionCardProps>(
       setOptions([...options, ""]);
     };
 
+    /**
+     * 编辑表单模式
+     */
     return (
-      <Card ref={focuseRef} isBlurred className={cardclasses}>
+      <FormCard>
         <CardHeader>
           <div className="flex w-full">
             <Input
@@ -185,7 +182,7 @@ export const QuestionCard = forwardRef<FancyMethods, QuestionCardProps>(
             </div>
           </div>
         </CardHeader>
-        <CardBody className="overflow-y-visible ">
+        <FormCardBody>
           <div className="relative pb-12 border-b-1 border-inherit">
             {answerType == answerOptionsEnum.TEXT && <TextOption />}
             {answerType == answerOptionsEnum.MULTIPLECHOICE && (
@@ -205,7 +202,7 @@ export const QuestionCard = forwardRef<FancyMethods, QuestionCardProps>(
               />
             )}
           </div>
-        </CardBody>
+        </FormCardBody>
         <CardFooter>
           <div className="w-full flex justify-end">
             <Button isIconOnly className="bg-transparent" onClick={handleCopy}>
@@ -231,7 +228,7 @@ export const QuestionCard = forwardRef<FancyMethods, QuestionCardProps>(
             </div>
           </div>
         </CardFooter>
-      </Card>
+      </FormCard>
     );
   }
 );
