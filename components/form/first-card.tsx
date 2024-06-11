@@ -1,11 +1,11 @@
 "use client";
 import React from "react";
-import { Card, CardBody } from "@nextui-org/card";
 import { Input } from "@nextui-org/input";
 
 import { FormBaseInfo } from "@/types/index";
 import { useThrottle } from "@/hooks";
-
+import { FormFirstCard } from "@/components/form-ui/form-first-card";
+import { FormCardBody } from "@/components/form-ui/form-card-body";
 interface FirstCardProps {
   title: string;
   description: string;
@@ -54,16 +54,13 @@ export const FirstCard: React.FC<FirstCardProps> = ({
   };
 
   return (
-    <Card
-      isBlurred
-      className="p-4 border-s-indigo-500 border-t-indigo-500  border-t-4"
-    >
-      <CardBody className="overflow-y-visible ">
+    <FormFirstCard>
+      <FormCardBody>
         <div className="flex w-full">
           <Input
             classNames={{
               inputWrapper: "light:bg-slate-50 h-14",
-              input: ["text-2xl"],
+              input: ["text-3xl"],
               innerWrapper: "",
             }}
             color="primary"
@@ -76,6 +73,9 @@ export const FirstCard: React.FC<FirstCardProps> = ({
         </div>
         <div className="flex w-full">
           <Input
+            classNames={{
+              input: ["text-base text-gray-600"],
+            }}
             color="primary"
             placeholder="表单说明"
             size="lg"
@@ -84,7 +84,7 @@ export const FirstCard: React.FC<FirstCardProps> = ({
             onChange={handleDesChange}
           />
         </div>
-      </CardBody>
-    </Card>
+      </FormCardBody>
+    </FormFirstCard>
   );
 };

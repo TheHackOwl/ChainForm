@@ -17,7 +17,6 @@ export const CheckboxesOption: React.FC<CheckboxesOptionProps> = ({
   addOption,
 }) => {
   const hanleChange = (index: number, value: string) => {
-    if (value.length == 0) return;
     optionValueChange(index, value);
   };
 
