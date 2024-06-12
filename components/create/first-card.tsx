@@ -29,7 +29,6 @@ export const FirstCard: React.FC<FirstCardProps> = ({
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
 
-    if (newValue.length == 0) return;
     setTitleValue(() => {
       throttledChangeHandler({
         name: newValue,
