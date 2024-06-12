@@ -278,3 +278,20 @@ export const DeleteIcon: React.FC<IconSvgProps> = (props) => {
     </svg>
   );
 };
+
+export const AddIcon: React.FC<IconSvgProps> = (props) => {
+  return (
+    <svg
+      className="icon"
+      height="36"
+      version="1.1"
+      viewBox="0 0 1024 1024"
+      width="36"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path d="M733.17 544.22H283.82c-17.67 0-32-14.33-32-32s14.33-32 32-32h449.35c17.67 0 32 14.33 32 32 0 17.68-14.33 32-32 32z" />
+      <path d="M540.5 287.55V736.9c0 17.67-14.33 32-32 32s-32-14.33-32-32V287.55c0-17.67 14.33-32 32-32s32 14.33 32 32z" />
+    </svg>
+  );
+};

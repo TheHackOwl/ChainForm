@@ -1,14 +1,23 @@
-interface AnswerTextProps {}
 import { Input } from "@nextui-org/input";
-
-export const AnswerText: React.FC<AnswerTextProps> = ({}) => {
+interface AnswerTextProps {
+  isDisable: boolean;
+  onValueChange: (val: string) => void;
+}
+export const AnswerText: React.FC<AnswerTextProps> = ({
+  isDisable,
+  onValueChange,
+}) => {
   return (
     <Input
       aria-label=""
       color="primary"
+      disabled={isDisable}
       placeholder="text"
       type="email"
       variant="underlined"
+      onChange={(e) => {
+        onValueChange(e.target.value);
+      }}
     />
   );
 };

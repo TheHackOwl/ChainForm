@@ -1,31 +1,40 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useReadContract } from "wagmi";
 
-import { AnswerFirstCard } from "@/components/answer/answer-first-card";
-import { AnserCard } from "@/components/answer/answer-card";
-import templateData from "@/constants/form-template.json";
-import { FormDataType } from "@/types";
+import { AnswerForm } from "@/components/answer/answer-form";
+import { ChainFormDataType } from "@/types";
+import { abi } from "@/constants/abi";
+import { contractAddress } from "@/constants/index";
+
 export default function AnswerPage({
   params,
 }: Readonly<{
   params: { id: string };
 }>) {
-  console.log(templateData);
-  const [formData, setFormData] = useState<FormDataType>(
-    templateData as FormDataType
-  );
+  const [formId, setFormId] = useState<string>(params.id);
+  const { data, isLoading } = useReadContract({
+    abi,
+    address: contractAddress,
+    functionName: "getForm",
+    args: [BigInt(params.id)],
+  });
+
+  const [formData, setFormData] = useState<ChainFormDataType>();
+
+  useEffect(() => {
+    console.log(data);
+    if (!isLoading) {
+      setFormId(params.id);
+      setFormData(data as ChainFormDataType);
+    }
+  }, [isLoading]);
+
+  if (formData == null) return;
 
   return (
     <div className="max-w-screen-md m-auto">
-      <div className="grid gap-y-4">
-        <AnswerFirstCard
-          description={formData.description}
-          title={formData.title}
-        />
-        {formData.questions.map((question, index) => {
-          return <AnserCard key={index} question={question} />;
-        })}
-      </div>
+      <AnswerForm formData={formData} formId={formId} isDisable={false} />
     </div>
   );
 }

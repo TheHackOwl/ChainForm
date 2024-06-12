@@ -1,39 +1,14 @@
 {
-  "id": "",
-  "title": "客户满意度调查",
-  "description": "感谢您参与我们的客户满意度调查。您的反馈对我们非常重要。",
+  "name": "Untitled form",
+  "description": "",
   "questions": [
     {
-      "id": 0,
-      "type": "text",
-      "questionTitle": "您认为我们可以在哪些方面做得更好？",
-      "required": true
-    },
-    {
-      "id": 1,
       "type": "multipleChoice",
-      "questionTitle": "您对我们的产品满意吗？",
+      "name": "Untitled Question",
       "options": [
-        "非常满意",
-        "满意",
-        "一般",
-        "不满意",
-        "非常不满意"
+        "Option 1"
       ],
-      "required": true
-    },
-    {
-      "id": 2,
-      "type": "checkboxes",
-      "questionTitle": "您通常在什么时间段购物？（可多选）",
-      "options": [
-        "早上",
-        "中午",
-        "下午",
-        "晚上",
-        "凌晨"
-      ],
-      "required": true
+      "required": false
     }
   ]
 }

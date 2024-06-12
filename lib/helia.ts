@@ -29,6 +29,7 @@ export const addJson = async <T>(jsonData: T): Promise<string> => {
   const helia = await createHeliaSingleton();
 
   const j: HeliaJSON = json(helia);
+
   const cid = await j.add(jsonData);
 
   return cid.toString();
@@ -36,8 +37,6 @@ export const addJson = async <T>(jsonData: T): Promise<string> => {
 
 export const getJsonByCid = async <T>(cidString: string): Promise<T> => {
   const cid = CID.parse(cidString);
-
-  console.log(cid, "cid");
 
   const helia = await createHeliaSingleton();
 

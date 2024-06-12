@@ -1,5 +1,4 @@
-import { FormTabs } from "@/components/form/form-tabs";
-
+import { FormTabs } from "@/components/create/form-tabs";
 import template from "@/constants/form-template.json";
 import { FormDataType } from "@/types/index";
 
