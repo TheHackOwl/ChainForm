@@ -2,37 +2,33 @@
 import { useState, useRef } from "react";
 import { Tabs, Tab } from "@nextui-org/tabs";
 import { Card, CardBody } from "@nextui-org/card";
+import { Button } from "@nextui-org/button";
+import { useWriteContract } from "wagmi";
 
-import { QuestionCard, FancyMethods } from "@/components/form/question-card";
-import { FirstCard } from "@/components/form/first-card";
+import { abi } from "@/constants/abi";
+import { contractAddress, getDefaultQuestion } from "@/constants/index";
+import { QuestionCard, FancyMethods } from "@/components/create/question-card";
+import { FirstCard } from "@/components/create/first-card";
 import { FormDataType, FormBaseInfo, Question } from "@/types/index";
+
 interface FormTabsProps {
   templateData: FormDataType;
 }
 
 export function FormTabs(props: FormTabsProps) {
-  // 初始化一个空数组来存储refs
+  const { writeContract } = useWriteContract();
   const questionRefs = useRef<FancyMethods[]>([]);
   const { templateData } = props;
   const [formData, setFormData] = useState<FormDataType>(templateData);
 
-  // const extractState = (state: IAppState) => {
-  //   return state.formData;
-  // };
-
-  // const actionMap = {
-  //   saveFormData: saveFormData,
-  //   saveFormBaseInfo: saveFormBaseInfo,
-  // };
-
-  // const [formData, appActions] = useRedux(extractState, actionMap);
-
   const formInfoChange = (formbaseInfo: FormBaseInfo) => {
-    // console.log(formbaseInfo, "formbaseInfo");
-    // appActions.saveFormBaseInfo(formbaseInfo);
     setFormData({ ...formData, ...formbaseInfo });
   };
 
+  /**
+   * 删除一个question函数
+   * @param index
+   */
   const handleDelete = (index: Number) => {
     setFormData({
       ...formData,
@@ -40,8 +36,12 @@ export function FormTabs(props: FormTabsProps) {
     });
   };
 
+  /**
+   * copy一个question函数
+   * @param index
+   * @param question
+   */
   const handleCopy = (index: number, question: Question) => {
-    question.id = Date.now();
     const questions = insertAt<Question>(
       [...formData.questions],
       index + 1,
@@ -54,6 +54,13 @@ export function FormTabs(props: FormTabsProps) {
     });
   };
 
+  /**
+   *
+   * @param array 在index位置上插入元素
+   * @param index
+   * @param item
+   * @returns
+   */
   function insertAt<T>(array: T[], index: number, item: T): T[] {
     const newArray = [];
 
@@ -70,10 +77,51 @@ export function FormTabs(props: FormTabsProps) {
     return newArray;
   }
 
-  const handlePublish = () => {
+  /**
+   * 发布函数
+   */
+  const handlePublish = async () => {
+    const questions: string[] = [];
+
     // 获取表单数据
     questionRefs.current.forEach((ref) => {
-      console.log(ref.combinedData());
+      questions.push(JSON.stringify(ref.combinedData()));
+    });
+
+    writeContract(
+      {
+        abi,
+        address: contractAddress,
+        functionName: "createForm",
+        args: [formData.name, formData.description, questions],
+      },
+      {
+        onSuccess(data) {
+          console.log(data, "onSuccess-data");
+        },
+        onError(error) {
+          console.log(error, "onError-error");
+        },
+        onSettled(settled) {
+          console.log(settled, "settled");
+        },
+      }
+    );
+  };
+
+  /**
+   * 添加卡片
+   */
+  const handleAdd = (index: number) => {
+    const questions = insertAt<Question>(
+      [...formData.questions],
+      index + 1,
+      getDefaultQuestion()
+    );
+
+    setFormData({
+      ...formData,
+      questions: questions,
     });
   };
 
@@ -84,15 +132,13 @@ export function FormTabs(props: FormTabsProps) {
           <FirstCard
             change={formInfoChange}
             description={formData.description}
-            title={formData.title}
+            name={formData.name}
           />
           {formData.questions.map((question, index) => {
             return (
               <QuestionCard
-                key={question.id}
+                key={question.name + index}
                 ref={(el) => {
-                  console.log(el, index);
-
                   // 这里确保refs数组和元素同步
                   if (el) {
                     questionRefs.current[index] = el;
@@ -100,11 +146,20 @@ export function FormTabs(props: FormTabsProps) {
                 }}
                 index={index}
                 question={question}
+                onAdd={handleAdd}
                 onCopy={handleCopy}
                 onDelete={handleDelete}
               />
             );
           })}
+
+          <Card>
+            <CardBody>
+              <Button color="primary" onClick={handlePublish}>
+                Send
+              </Button>
+            </CardBody>
+          </Card>
         </div>
       </Tab>
       <Tab key="excitation" title="Excitation">

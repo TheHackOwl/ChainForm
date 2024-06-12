@@ -7,17 +7,17 @@ import { useThrottle } from "@/hooks";
 import { FormFirstCard } from "@/components/form-ui/form-first-card";
 import { FormCardBody } from "@/components/form-ui/form-card-body";
 interface FirstCardProps {
-  title: string;
+  name: string;
   description: string;
   change: (data: FormBaseInfo) => void;
 }
 
 export const FirstCard: React.FC<FirstCardProps> = ({
-  title,
+  name,
   description,
   change,
 }) => {
-  const [titleValue, setTitleValue] = React.useState(title);
+  const [titleValue, setTitleValue] = React.useState(name);
   const [descriptionValue, setDescriptionValue] = React.useState(description);
 
   // 使用自定义的useThrottle Hook Using the custom useThrottle Hook
@@ -32,7 +32,7 @@ export const FirstCard: React.FC<FirstCardProps> = ({
     if (newValue.length == 0) return;
     setTitleValue(() => {
       throttledChangeHandler({
-        title: newValue,
+        name: newValue,
         description: descriptionValue,
       });
 
@@ -45,7 +45,7 @@ export const FirstCard: React.FC<FirstCardProps> = ({
 
     setDescriptionValue(() => {
       throttledChangeHandler({
-        title: titleValue,
+        name: titleValue,
         description: newValue,
       });
 
@@ -77,7 +77,7 @@ export const FirstCard: React.FC<FirstCardProps> = ({
               input: ["text-base text-gray-600"],
             }}
             color="primary"
-            placeholder="表单说明"
+            placeholder="Form description"
             size="lg"
             value={descriptionValue}
             variant="underlined"

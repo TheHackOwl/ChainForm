@@ -13,8 +13,8 @@ export const siteConfig = {
       href: "/forms",
     },
     {
-      label: "About",
-      href: "/about",
+      label: "Create",
+      href: "/forms/create",
     },
   ],
   navMenuItems: [
@@ -27,8 +27,8 @@ export const siteConfig = {
       href: "/forms",
     },
     {
-      label: "About",
-      href: "/About",
+      label: "Create",
+      href: "/forms/create",
     },
   ],
   links: {

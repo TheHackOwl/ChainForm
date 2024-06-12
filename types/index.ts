@@ -6,12 +6,11 @@ export type IconSvgProps = SVGProps<SVGSVGElement> & {
 };
 
 export interface FormDataType extends FormBaseInfo {
-  id: string;
   questions: Question[];
 }
 
 export interface FormBaseInfo {
-  title: string;
+  name: string;
   description: string;
 }
 
@@ -21,9 +20,8 @@ export type Question =
   | CheckboxesQuestion;
 
 export interface BaseQuestion {
-  id: number;
   type: AnswerType;
-  questionTitle: string;
+  name: string;
   required: boolean;
 }
 
@@ -35,4 +33,31 @@ export interface MultipleChoiceQuestion extends BaseQuestion {
 
 export interface CheckboxesQuestion extends BaseQuestion {
   options: string[];
+}
+
+export interface AnswerFormType extends FormBaseInfo {
+  originalFormID: string;
+  answer: Answer[];
+}
+
+export type Answer = TextAnswer | MultipleChoiceAnswer | CheckboxesAnswer;
+
+export interface TextAnswer extends TextQuestion {
+  answer: string;
+}
+
+export interface MultipleChoiceAnswer extends MultipleChoiceQuestion {
+  answer: string;
+}
+
+export interface CheckboxesAnswer extends CheckboxesQuestion {
+  answer: string[];
+}
+
+export interface ChainFormDataType {
+  createdAt: bigint;
+  creator: `0x${string}`;
+  description: string;
+  name: string;
+  questions: string[];
 }

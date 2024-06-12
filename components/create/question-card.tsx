@@ -7,13 +7,12 @@ import { Select, SelectItem } from "@nextui-org/select";
 import { Switch } from "@nextui-org/switch";
 import { Button } from "@nextui-org/button";
 
-import { TextOption } from "./text-option";
-import { MultipleChoiceOption } from "./multiple-choice-option";
-import { CheckboxesOption } from "./checkboxes-option";
-
+import { TextOption } from "@/components/create/text-option";
+import { MultipleChoiceOption } from "@/components/create/multiple-choice-option";
+import { CheckboxesOption } from "@/components/create/checkboxes-option";
 import { FormCardBody } from "@/components/form-ui/form-card-body";
 import { FormCard } from "@/components/form-ui/form-card";
-import { CopyIcon, TrashBinIcon } from "@/components/icons";
+import { CopyIcon, TrashBinIcon, AddIcon } from "@/components/icons";
 import {
   answerOptions,
   answerOptionsEnum,
@@ -29,6 +28,7 @@ interface QuestionCardProps {
   index: number;
   onCopy: (index: number, question: Question) => void;
   onDelete: (index: number) => void;
+  onAdd: (index: number) => void;
 }
 
 // 定义这个组件对外公开的方法
@@ -37,10 +37,8 @@ export interface FancyMethods {
 }
 
 export const QuestionCard = forwardRef<FancyMethods, QuestionCardProps>(
-  ({ question, index, onCopy, onDelete }, ref) => {
-    const [questionTitle, setQuestionTitle] = useState<string>(
-      question.questionTitle
-    );
+  ({ question, index, onCopy, onDelete, onAdd }, ref) => {
+    const [questionName, setQuestionName] = useState<string>(question.name);
     const [answerType, setAnswerType] = useState<AnswerType>(
       question.type || answerOptionsEnum.TEXT
     );
@@ -77,7 +75,7 @@ export const QuestionCard = forwardRef<FancyMethods, QuestionCardProps>(
     const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       const value = event.target.value;
 
-      setQuestionTitle(value);
+      setQuestionName(value);
     };
 
     /**
@@ -86,8 +84,7 @@ export const QuestionCard = forwardRef<FancyMethods, QuestionCardProps>(
      */
     const combinedData = (): Question => {
       const returnObj: Question = {
-        id: question.id,
-        questionTitle,
+        name: questionName,
         type: answerType,
         required: required,
       };
@@ -99,20 +96,6 @@ export const QuestionCard = forwardRef<FancyMethods, QuestionCardProps>(
       ];
 
       return returnObj;
-    };
-
-    /**
-     * 复制当前卡片
-     */
-    const handleCopy = () => {
-      onCopy(index, combinedData());
-    };
-
-    /**
-     * 删除当前卡片
-     */
-    const handleDelete = () => {
-      onDelete(index);
     };
 
     /**
@@ -140,7 +123,7 @@ export const QuestionCard = forwardRef<FancyMethods, QuestionCardProps>(
      * 添加option
      */
     const addOption = () => {
-      setOptions([...options, ""]);
+      setOptions([...options, `option ${options.length + 1}`]);
     };
 
     /**
@@ -159,7 +142,7 @@ export const QuestionCard = forwardRef<FancyMethods, QuestionCardProps>(
               color="primary"
               placeholder="Question"
               size="lg"
-              value={questionTitle}
+              value={questionName}
               variant="underlined"
               onChange={handleTitleChange}
             />
@@ -205,13 +188,30 @@ export const QuestionCard = forwardRef<FancyMethods, QuestionCardProps>(
         </FormCardBody>
         <CardFooter>
           <div className="w-full flex justify-end">
-            <Button isIconOnly className="bg-transparent" onClick={handleCopy}>
+            <Button
+              isIconOnly
+              className="bg-transparent"
+              onClick={() => {
+                onAdd(index);
+              }}
+            >
+              <AddIcon />
+            </Button>
+            <Button
+              isIconOnly
+              className="bg-transparent"
+              onClick={() => {
+                onCopy(index, combinedData());
+              }}
+            >
               <CopyIcon />
             </Button>
             <Button
               isIconOnly
               className="bg-transparent"
-              onClick={handleDelete}
+              onClick={() => {
+                onDelete(index);
+              }}
             >
               <TrashBinIcon />
             </Button>
