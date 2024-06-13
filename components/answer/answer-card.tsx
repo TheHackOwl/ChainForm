@@ -5,7 +5,7 @@ import { AnswerText } from "./answer-text";
 import { AnswerMultipleChoice } from "./answer-multiple-choice";
 import { AnswerCheckboxes } from "./answer-checkboxes";
 
-import { FormCard } from "@/components/form-ui/form-card";
+import { RequireStar } from "@/components/require-star";
 import { FormCardBody } from "@/components/form-ui/form-card-body";
 import {
   Question,
@@ -14,6 +14,7 @@ import {
   Answer,
 } from "@/types";
 import { answerOptionsEnum } from "@/constants";
+import { FancyMethods } from "@/hooks";
 
 // 定义类型
 type AnswerState = string | string[];
@@ -23,12 +24,7 @@ interface AnserCardProps {
   isDisable: boolean;
 }
 
-// 定义这个组件对外公开的方法
-export interface FancyMethods {
-  combinedData: () => Answer;
-}
-
-export const AnserCard = forwardRef<FancyMethods, AnserCardProps>(
+export const AnserCard = forwardRef<FancyMethods<Answer>, AnserCardProps>(
   ({ question, isDisable }, ref) => {
     // 使用 useMemo 在组件初始化时基于 question.type 设置初始值
     const initialAnswer = useMemo(() => {
@@ -45,8 +41,10 @@ export const AnserCard = forwardRef<FancyMethods, AnserCardProps>(
     }, [question.type]);
     const [answer, setAnswer] = useState<AnswerState>(initialAnswer);
 
+    // 定义由父组件调用的函数
     useImperativeHandle(ref, () => ({
-      combinedData,
+      aggregateData: combinedData,
+      checkStatus: checkForm,
     }));
 
     const combinedData = (): Answer => {
@@ -56,9 +54,31 @@ export const AnserCard = forwardRef<FancyMethods, AnserCardProps>(
       } as Answer;
     };
 
+    const checkForm = (): boolean => {
+      const handleInvalid = () => {
+        // 这里可以加入任何返回 false 时的处理逻辑
+        return false;
+      };
+
+      if (!question.required) return true;
+
+      if (typeof answer === "string") {
+        return answer.trim() !== "" ? true : handleInvalid();
+      }
+
+      if (Array.isArray(answer)) {
+        return answer.length > 0 ? true : handleInvalid();
+      }
+
+      return true;
+    };
+
     return (
-      <FormCard>
-        <CardHeader>{question.name}</CardHeader>
+      <>
+        <CardHeader>
+          {question.name}
+          {question.required && <RequireStar />}
+        </CardHeader>
         <FormCardBody>
           {question.type == answerOptionsEnum.TEXT && (
             <AnswerText isDisable={isDisable} onValueChange={setAnswer} />
@@ -80,7 +100,7 @@ export const AnserCard = forwardRef<FancyMethods, AnserCardProps>(
             />
           )}
         </FormCardBody>
-      </FormCard>
+      </>
     );
   }
 );

@@ -42,15 +42,21 @@ export interface AnswerFormType extends FormBaseInfo {
 
 export type Answer = TextAnswer | MultipleChoiceAnswer | CheckboxesAnswer;
 
-export interface TextAnswer extends TextQuestion {
+interface BaseAnswer extends BaseQuestion {
+  answer: any;
+}
+
+export interface TextAnswer extends BaseAnswer {
   answer: string;
 }
 
-export interface MultipleChoiceAnswer extends MultipleChoiceQuestion {
+export interface MultipleChoiceAnswer extends BaseAnswer {
+  options: string[]; // Inherits options from MultipleChoiceQuestion
   answer: string;
 }
 
-export interface CheckboxesAnswer extends CheckboxesQuestion {
+export interface CheckboxesAnswer extends BaseAnswer {
+  options: string[]; // Inherits options from CheckboxesQuestion
   answer: string[];
 }
 

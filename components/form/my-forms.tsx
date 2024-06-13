@@ -3,8 +3,7 @@ import { useReadContract, useAccount } from "wagmi";
 
 import { ShowCard } from "./show-card";
 
-import { abi } from "@/constants/abi";
-import { contractAddress } from "@/constants/index";
+import { ABI, GET_MY_FORMS, CONTRACT_ADDRESS } from "@/constants/contract";
 
 interface MyFormsProps {}
 
@@ -12,9 +11,9 @@ export const MyForms: React.FC<MyFormsProps> = () => {
   const { address } = useAccount();
 
   const { data, isLoading } = useReadContract({
-    abi,
-    address: contractAddress,
-    functionName: "getMyForms",
+    abi: ABI,
+    address: CONTRACT_ADDRESS,
+    functionName: GET_MY_FORMS,
     account: address,
     args: [],
   });

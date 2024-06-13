@@ -1,7 +1,15 @@
-export const abi = [
+export const CREATE_FORM = "createForm";
+export const GET_FORM = "getForm";
+export const GET_MY_FORMS = "getMyForms";
+export const GET_SUBMISSIONS = "getSubmissions";
+export const SUBMIT_FORM = "submitForm";
+
+export const CONTRACT_ADDRESS = "0xdD7099FFb56e84657302F1e105451ff7832a1572";
+
+export const ABI = [
   {
     type: "function",
-    name: "createForm",
+    name: CREATE_FORM,
     inputs: [
       {
         name: "_name",
@@ -24,7 +32,7 @@ export const abi = [
   },
   {
     type: "function",
-    name: "getForm",
+    name: GET_FORM,
     inputs: [
       {
         name: "_formId",
@@ -70,7 +78,7 @@ export const abi = [
   },
   {
     type: "function",
-    name: "getMyForms",
+    name: GET_MY_FORMS,
     inputs: [],
     outputs: [
       {
@@ -83,7 +91,7 @@ export const abi = [
   },
   {
     type: "function",
-    name: "getSubmissions",
+    name: GET_SUBMISSIONS,
     inputs: [
       {
         name: "_formId",
@@ -124,7 +132,7 @@ export const abi = [
   },
   {
     type: "function",
-    name: "submitForm",
+    name: SUBMIT_FORM,
     inputs: [
       {
         name: "_formId",
