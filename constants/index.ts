@@ -15,8 +15,6 @@ export const answerOptions = [
   { key: answerOptionsEnum.CHECKBOXES, label: "Checkboxes" },
 ];
 
-export const contractAddress = "0xdD7099FFb56e84657302F1e105451ff7832a1572";
-
 /**
  * 获取默认的question
  * @returns
@@ -24,6 +22,6 @@ export const contractAddress = "0xdD7099FFb56e84657302F1e105451ff7832a1572";
 export const getDefaultQuestion = () => ({
   type: answerOptionsEnum.TEXT,
   name: "Question",
-  options: [],
+  options: ["Option 1"],
   required: false,
 });

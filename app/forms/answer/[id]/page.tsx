@@ -4,8 +4,7 @@ import { useReadContract } from "wagmi";
 
 import { AnswerForm } from "@/components/answer/answer-form";
 import { ChainFormDataType } from "@/types";
-import { abi } from "@/constants/abi";
-import { contractAddress } from "@/constants/index";
+import { ABI, CONTRACT_ADDRESS, GET_FORM } from "@/constants/contract";
 
 export default function AnswerPage({
   params,
@@ -14,16 +13,15 @@ export default function AnswerPage({
 }>) {
   const [formId, setFormId] = useState<string>(params.id);
   const { data, isLoading } = useReadContract({
-    abi,
-    address: contractAddress,
-    functionName: "getForm",
+    abi: ABI,
+    address: CONTRACT_ADDRESS,
+    functionName: GET_FORM,
     args: [BigInt(params.id)],
   });
 
   const [formData, setFormData] = useState<ChainFormDataType>();
 
   useEffect(() => {
-    console.log(data);
     if (!isLoading) {
       setFormId(params.id);
       setFormData(data as ChainFormDataType);

@@ -5,8 +5,7 @@ import { Card, CardBody, CardFooter } from "@nextui-org/card";
 import { Button } from "@nextui-org/button";
 import { useRouter } from "next/navigation";
 
-import { abi } from "@/constants/abi";
-import { contractAddress } from "@/constants/index";
+import { ABI, CONTRACT_ADDRESS, GET_FORM } from "@/constants/contract";
 interface ShowCardProps {
   id: bigint;
 }
@@ -15,9 +14,9 @@ export const ShowCard: React.FC<ShowCardProps> = ({ id }) => {
   const router = useRouter();
 
   const { data, isLoading } = useReadContract({
-    abi,
-    address: contractAddress,
-    functionName: "getForm",
+    abi: ABI,
+    address: CONTRACT_ADDRESS,
+    functionName: GET_FORM,
     args: [id],
   });
 

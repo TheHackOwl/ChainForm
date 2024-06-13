@@ -1,161 +1,151 @@
 "use client";
-import { useState, useRef } from "react";
 import { Tabs, Tab } from "@nextui-org/tabs";
 import { Card, CardBody } from "@nextui-org/card";
 import { Button } from "@nextui-org/button";
 import { useWriteContract } from "wagmi";
+import React, { useState } from "react";
 
-import { abi } from "@/constants/abi";
-import { contractAddress, getDefaultQuestion } from "@/constants/index";
-import { QuestionCard, FancyMethods } from "@/components/create/question-card";
+import { useQuestions } from "./hooks/useQuestions";
+import { useFormInfo } from "./hooks/useFormInfo";
+
+import { QuestionCardContent } from "@/components/create/question-card-content";
+import { FormCard } from "@/components/form-ui/form-card";
 import { FirstCard } from "@/components/create/first-card";
-import { FormDataType, FormBaseInfo, Question } from "@/types/index";
-
+import { FormDataType, Question } from "@/types/index";
+import { useAggregateRefData, useCardFocus, useRequireConect } from "@/hooks";
+import { ABI, CONTRACT_ADDRESS, CREATE_FORM } from "@/constants/contract";
 interface FormTabsProps {
   templateData: FormDataType;
 }
 
-export function FormTabs(props: FormTabsProps) {
-  const { writeContract } = useWriteContract();
-  const questionRefs = useRef<FancyMethods[]>([]);
-  const { templateData } = props;
-  const [formData, setFormData] = useState<FormDataType>(templateData);
+export function FormTabs({ templateData }: FormTabsProps) {
+  const { requireConnect } = useRequireConect();
 
-  const formInfoChange = (formbaseInfo: FormBaseInfo) => {
-    setFormData({ ...formData, ...formbaseInfo });
-  };
+  const { writeContractAsync } = useWriteContract();
 
-  /**
-   * 删除一个question函数
-   * @param index
-   */
-  const handleDelete = (index: Number) => {
-    setFormData({
-      ...formData,
-      questions: formData.questions.filter((_, i) => i !== index),
-    });
-  };
+  const [isSave, setIsSave] = useState(true); // 每次切换tab，是否保存了数据
 
-  /**
-   * copy一个question函数
-   * @param index
-   * @param question
-   */
-  const handleCopy = (index: number, question: Question) => {
-    const questions = insertAt<Question>(
-      [...formData.questions],
-      index + 1,
-      question
-    );
+  const [Sending, setSending] = useState(false);
 
-    setFormData({
-      ...formData,
-      questions: questions,
-    });
-  };
+  const { refs: questionRefs, aggregateData } = useAggregateRefData<Question>();
 
-  /**
-   *
-   * @param array 在index位置上插入元素
-   * @param index
-   * @param item
-   * @returns
-   */
-  function insertAt<T>(array: T[], index: number, item: T): T[] {
-    const newArray = [];
+  const { baseInfo, updateBaseInfo } = useFormInfo({
+    name: templateData.name,
+    description: templateData.description,
+  });
 
-    for (let i = 0; i < array.length; i++) {
-      if (i === index) {
-        newArray.push(item);
-      }
-      newArray.push(array[i]);
-    }
-    if (index >= array.length) {
-      newArray.push(item);
-    }
+  const {
+    questionList,
+    deleteQuestion,
+    copyQuestion,
+    addQuestion,
+    setQuestionList,
+  } = useQuestions(templateData.questions);
 
-    return newArray;
-  }
+  const { selectedCard, setSelectedCard, registerCard, removeCard } =
+    useCardFocus();
 
   /**
    * 发布函数
    */
   const handlePublish = async () => {
-    const questions: string[] = [];
+    setSending(true);
+    try {
+      await requireConnect();
 
-    // 获取表单数据
-    questionRefs.current.forEach((ref) => {
-      questions.push(JSON.stringify(ref.combinedData()));
-    });
+      const questions: string[] = aggregateData().map((item) =>
+        JSON.stringify(item)
+      );
 
-    writeContract(
-      {
-        abi,
-        address: contractAddress,
-        functionName: "createForm",
-        args: [formData.name, formData.description, questions],
-      },
-      {
-        onSuccess(data) {
-          console.log(data, "onSuccess-data");
-        },
-        onError(error) {
-          console.log(error, "onError-error");
-        },
-        onSettled(settled) {
-          console.log(settled, "settled");
-        },
-      }
-    );
+      await callSmartContract(baseInfo.name, baseInfo.description, questions);
+
+      // Todo: 回到forms页面
+    } catch (error) {
+    } finally {
+      setSending(false);
+    }
+  };
+
+  // 调用智能合约函数
+  const callSmartContract = async (
+    name: string,
+    description: string,
+    questions: string[]
+  ) => {
+    try {
+      await writeContractAsync({
+        abi: ABI,
+        address: CONTRACT_ADDRESS,
+        functionName: CREATE_FORM,
+        args: [name, description, questions],
+      });
+    } catch (error) {
+      console.error("调用智能合约出错:", error);
+    }
   };
 
   /**
-   * 添加卡片
+   * 切换tab时，保存questions的值
+   * @param key
    */
-  const handleAdd = (index: number) => {
-    const questions = insertAt<Question>(
-      [...formData.questions],
-      index + 1,
-      getDefaultQuestion()
-    );
+  const handleTabsChange = (key: React.Key) => {
+    if (!isSave) {
+      setQuestionList(aggregateData());
 
-    setFormData({
-      ...formData,
-      questions: questions,
-    });
+      setIsSave(true);
+    }
+
+    if (key === "questions") setIsSave(false);
   };
 
   return (
-    <Tabs aria-label="Options" className="relative" color="primary">
+    <Tabs
+      aria-label="Options"
+      className="relative"
+      color="primary"
+      onSelectionChange={handleTabsChange}
+    >
       <Tab key="questions" title="Questions">
         <div className="grid gap-y-4">
           <FirstCard
-            change={formInfoChange}
-            description={formData.description}
-            name={formData.name}
+            change={updateBaseInfo}
+            description={baseInfo.description}
+            name={baseInfo.name}
           />
-          {formData.questions.map((question, index) => {
+          {questionList.map((question, index) => {
             return (
-              <QuestionCard
+              <FormCard
                 key={question.name + index}
-                ref={(el) => {
-                  // 这里确保refs数组和元素同步
-                  if (el) {
-                    questionRefs.current[index] = el;
-                  }
-                }}
-                index={index}
-                question={question}
-                onAdd={handleAdd}
-                onCopy={handleCopy}
-                onDelete={handleDelete}
-              />
+                id={question.name + index}
+                registerCard={registerCard}
+                removeCard={removeCard}
+                selectedCard={selectedCard}
+                setSelectedCard={setSelectedCard}
+              >
+                <QuestionCardContent
+                  ref={(el) => {
+                    // 这里确保refs数组和元素同步
+                    if (el) {
+                      questionRefs.current[index] = el;
+                    }
+                  }}
+                  index={index}
+                  question={question}
+                  onAdd={addQuestion}
+                  onCopy={copyQuestion}
+                  onDelete={deleteQuestion}
+                />
+              </FormCard>
             );
           })}
 
           <Card>
             <CardBody>
-              <Button color="primary" onClick={handlePublish}>
+              <Button
+                color="primary"
+                isLoading={Sending}
+                onClick={handlePublish}
+              >
                 Send
               </Button>
             </CardBody>
