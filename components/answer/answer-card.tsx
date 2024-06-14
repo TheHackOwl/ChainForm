@@ -6,13 +6,9 @@ import { AnswerMultipleChoice } from "./answer-multiple-choice";
 import { AnswerCheckboxes } from "./answer-checkboxes";
 
 import { RequireStar } from "@/components/require-star";
+import { FormCard } from "@/components/form-ui/form-card";
 import { FormCardBody } from "@/components/form-ui/form-card-body";
-import {
-  Question,
-  MultipleChoiceQuestion,
-  CheckboxesQuestion,
-  Answer,
-} from "@/types";
+import { Question } from "@/types";
 import { answerOptionsEnum } from "@/constants";
 import { FancyMethods } from "@/hooks";
 
@@ -22,10 +18,11 @@ type AnswerState = string | string[];
 interface AnserCardProps {
   question: Question;
   isDisable: boolean;
+  selected?: boolean;
 }
 
-export const AnserCard = forwardRef<FancyMethods<Answer>, AnserCardProps>(
-  ({ question, isDisable }, ref) => {
+export const AnserCard = forwardRef<FancyMethods<Question>, AnserCardProps>(
+  ({ question, isDisable, selected }, ref) => {
     // 使用 useMemo 在组件初始化时基于 question.type 设置初始值
     const initialAnswer = useMemo(() => {
       switch (question.type) {
@@ -47,11 +44,11 @@ export const AnserCard = forwardRef<FancyMethods<Answer>, AnserCardProps>(
       checkStatus: checkForm,
     }));
 
-    const combinedData = (): Answer => {
+    const combinedData = (): Question => {
       return {
         ...question,
         answer: answer,
-      } as Answer;
+      };
     };
 
     const checkForm = (): boolean => {
@@ -74,7 +71,7 @@ export const AnserCard = forwardRef<FancyMethods<Answer>, AnserCardProps>(
     };
 
     return (
-      <>
+      <FormCard selected={selected}>
         <CardHeader>
           {question.name}
           {question.required && <RequireStar />}
@@ -87,7 +84,7 @@ export const AnserCard = forwardRef<FancyMethods<Answer>, AnserCardProps>(
           {question.type == answerOptionsEnum.MULTIPLECHOICE && (
             <AnswerMultipleChoice
               isDisable={isDisable}
-              options={(question as MultipleChoiceQuestion).options}
+              options={question.options as string[]}
               onValueChange={setAnswer}
             />
           )}
@@ -95,12 +92,12 @@ export const AnserCard = forwardRef<FancyMethods<Answer>, AnserCardProps>(
           {question.type == answerOptionsEnum.CHECKBOXES && (
             <AnswerCheckboxes
               isDisable={isDisable}
-              options={(question as CheckboxesQuestion).options}
+              options={question.options as string[]}
               onValueChange={setAnswer}
             />
           )}
         </FormCardBody>
-      </>
+      </FormCard>
     );
   }
 );

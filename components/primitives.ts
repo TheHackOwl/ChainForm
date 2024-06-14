@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import { tv } from "tailwind-variants";
 
 export const title = tv({
@@ -51,3 +52,7 @@ export const subtitle = tv({
     fullWidth: true,
   },
 });
+
+export const cardGap = (className?: string) => {
+  return clsx("grid gap-y-4", className);
+};

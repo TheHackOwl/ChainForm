@@ -19,6 +19,7 @@
 		"@nextui-org/link": "2.0.31",
 		"@nextui-org/listbox": "2.1.21",
 		"@nextui-org/navbar": "2.0.32",
+		"@nextui-org/pagination": "^2.0.32",
 		"@nextui-org/progress": "^2.0.30",
 		"@nextui-org/radio": "^2.1.1",
 		"@nextui-org/select": "^2.2.1",

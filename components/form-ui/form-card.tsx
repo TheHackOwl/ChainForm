@@ -1,42 +1,19 @@
-import React, { useRef, useEffect } from "react";
+import React from "react";
 import { Card } from "@nextui-org/card";
 import clsx from "clsx";
 
-import { Id as CardId, UseCardFocusReturn } from "@/hooks/useCardFocus";
-
-interface FormCard extends UseCardFocusReturn {
+interface FormCard {
   children: React.ReactNode;
-  id: CardId;
+  selected?: boolean;
 }
 
-export const FormCard: React.FC<FormCard> = ({
-  children,
-  id,
-  selectedCard,
-  setSelectedCard,
-  registerCard,
-  removeCard,
-}) => {
-  const cardRef = useRef<HTMLDivElement>(null);
-
+export const FormCard: React.FC<FormCard> = ({ children, selected }) => {
   const cardclasses = clsx("p-4  border-l-4", {
-    "border-s-indigo-500": selectedCard === id,
+    "border-s-indigo-500": selected,
   });
 
-  useEffect(() => {
-    registerCard(cardRef.current, id);
-
-    return () => {
-      removeCard(id);
-    };
-  }, [registerCard, removeCard, id]);
-
-  const handleFocus = () => {
-    setSelectedCard(id);
-  };
-
   return (
-    <Card ref={cardRef} isBlurred className={cardclasses} onFocus={handleFocus}>
+    <Card isBlurred className={cardclasses}>
       {children}
     </Card>
   );

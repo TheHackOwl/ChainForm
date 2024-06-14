@@ -12,6 +12,7 @@ import { useOptions } from "./hooks/useOptions";
 import { TextOption } from "@/components/create/text-option";
 import { MultipleChoiceOption } from "@/components/create/multiple-choice-option";
 import { CheckboxesOption } from "@/components/create/checkboxes-option";
+import { FormCard } from "@/components/form-ui/form-card";
 import { FormCardBody } from "@/components/form-ui/form-card-body";
 import { CopyIcon, TrashBinIcon, AddIcon } from "@/components/icons";
 import { FancyMethods } from "@/hooks";
@@ -20,14 +21,11 @@ import {
   answerOptionsEnum,
   AnswerType,
 } from "@/constants/index";
-import {
-  Question,
-  MultipleChoiceQuestion,
-  CheckboxesQuestion,
-} from "@/types/index";
+import { Question } from "@/types/index";
 interface QuestionCardContentProps {
   question: Question;
   index: number;
+  selected?: boolean;
   onCopy: (index: number, question: Question) => void;
   onDelete: (index: number) => void;
   onAdd: (index: number) => void;
@@ -36,7 +34,7 @@ interface QuestionCardContentProps {
 export const QuestionCardContent = forwardRef<
   FancyMethods<Question>,
   QuestionCardContentProps
->(({ question, index, onCopy, onDelete, onAdd }, ref) => {
+>(({ question, index, selected, onCopy, onDelete, onAdd }, ref) => {
   const [questionName, setQuestionName] = useState<string>(question.name);
 
   const [answerType, setAnswerType] = useState<AnswerType>(
@@ -44,7 +42,7 @@ export const QuestionCardContent = forwardRef<
   );
 
   const { options, updateOptions, updateOptionValue, addOption } = useOptions(
-    (question as MultipleChoiceQuestion | CheckboxesQuestion).options || []
+    (question.options as string[]) || []
   );
 
   const [required, setRequired] = useState(question.required);
@@ -91,15 +89,13 @@ export const QuestionCardContent = forwardRef<
 
     if (answerType == answerOptionsEnum.TEXT) return returnObj;
 
-    (returnObj as CheckboxesQuestion | MultipleChoiceQuestion).options = [
-      ...options,
-    ];
+    returnObj.options = [...options];
 
     return returnObj;
   };
 
   return (
-    <>
+    <FormCard selected={selected}>
       <CardHeader>
         <div className="flex w-full">
           <Input
@@ -197,7 +193,7 @@ export const QuestionCardContent = forwardRef<
           </div>
         </div>
       </CardFooter>
-    </>
+    </FormCard>
   );
 });
 
