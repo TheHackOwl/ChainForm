@@ -3,8 +3,13 @@ import { useEffect, useState } from "react";
 import { useReadContract } from "wagmi";
 
 import { AnswerForm } from "@/components/answer/answer-form";
-import { ChainFormDataType } from "@/types";
 import { ABI, CONTRACT_ADDRESS, GET_FORM } from "@/constants/contract";
+import { FormDataType } from "@/types";
+
+interface UseReadContractReturnType {
+  readonly data: FormDataType | undefined;
+  readonly isLoading: boolean;
+}
 
 export default function AnswerPage({
   params,
@@ -12,22 +17,23 @@ export default function AnswerPage({
   params: { id: string };
 }>) {
   const [formId, setFormId] = useState<string>(params.id);
-  const { data, isLoading } = useReadContract({
+  const { data, isLoading }: UseReadContractReturnType = useReadContract({
     abi: ABI,
     address: CONTRACT_ADDRESS,
     functionName: GET_FORM,
     args: [BigInt(params.id)],
   });
 
-  const [formData, setFormData] = useState<ChainFormDataType>();
+  const [formData, setFormData] = useState<FormDataType>();
 
   useEffect(() => {
     if (!isLoading) {
       setFormId(params.id);
-      setFormData(data as ChainFormDataType);
+      setFormData(data);
     }
   }, [isLoading]);
 
+  // Todo: 添加加载动画
   if (formData == null) return;
 
   return (

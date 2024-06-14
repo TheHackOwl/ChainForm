@@ -12,7 +12,7 @@ export const AnswerText: React.FC<AnswerTextProps> = ({
       aria-label=""
       color="primary"
       disabled={isDisable}
-      placeholder="text"
+      placeholder="Answer text"
       type="email"
       variant="underlined"
       onChange={(e) => {

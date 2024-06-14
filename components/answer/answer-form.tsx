@@ -7,19 +7,20 @@ import { useRouter } from "next/navigation";
 
 import { AnswerFirstCard } from "@/components/answer/answer-first-card";
 import { AnserCard } from "@/components/answer/answer-card";
-import { Answer, ChainFormDataType, AnswerFormType } from "@/types";
+import { FormDataType, Question, AnswerFormType } from "@/types";
 import { saveAnswerForm, generateHash } from "@/app/actions";
 import { ABI, SUBMIT_FORM, CONTRACT_ADDRESS } from "@/constants/contract";
 import { useAggregateRefData, useCardFocus } from "@/hooks/index";
-import { FormCard } from "@/components/form-ui/form-card";
+import { CardSelector } from "@/components/form-ui/card-selector";
 import { useRequireConect } from "@/hooks";
+import { cardGap } from "@/components/primitives";
 
 interface CustomError extends Error {
   shortMessage?: string;
 }
 
 interface AnswerFormProps {
-  formData: ChainFormDataType;
+  formData: FormDataType;
   isDisable: boolean;
   formId: string;
 }
@@ -43,7 +44,7 @@ export const AnswerForm: React.FC<AnswerFormProps> = ({
     refs: questionRefs,
     aggregateData,
     checkAllComponentsStatus,
-  } = useAggregateRefData<Answer>();
+  } = useAggregateRefData<Question>();
 
   const { selectedCard, setSelectedCard, registerCard, removeCard } =
     useCardFocus();
@@ -61,13 +62,13 @@ export const AnswerForm: React.FC<AnswerFormProps> = ({
       await requireConnect();
 
       // 获取提交数据
-      const submitData: AnswerFormType = getSubmitData();
+      const submitData = getSubmitData();
 
       // 保存表单数据并获取cid
       const cid = await saveAnswerForm(submitData);
 
       // 生成数据哈希
-      const dataHash = generateHash(submitData);
+      const dataHash = await generateHash(submitData);
 
       // 调用智能合约
       await callSmartContract(formId, cid, dataHash);
@@ -91,19 +92,20 @@ export const AnswerForm: React.FC<AnswerFormProps> = ({
   // 调用智能合约函数
   const callSmartContract = async (
     formId: string,
-    cid: any,
+    cid: string,
     dataHash: string
   ) => {
     try {
       const _formId = BigInt(formId);
-      const cidStr = cid.toString();
+
+      console.log(cid, "cid");
 
       await writeContractAsync({
         abi: ABI,
         address: CONTRACT_ADDRESS,
         account: address,
         functionName: SUBMIT_FORM,
-        args: [_formId, cidStr, dataHash],
+        args: [_formId, dataHash, cid],
       });
     } catch (error: any) {
       const customError = error as CustomError;
@@ -115,26 +117,29 @@ export const AnswerForm: React.FC<AnswerFormProps> = ({
     }
   };
 
-  const getSubmitData = () => {
+  const getSubmitData = (): AnswerFormType => {
     const answer = aggregateData();
 
     return {
       originalFormID: formId,
-      answer: answer,
+      questions: answer,
       name: formData!.name,
       description: formData!.description,
     };
   };
 
   return (
-    <div className="grid gap-y-4">
+    <div className={cardGap()}>
       <AnswerFirstCard
         description={formData.description}
         name={formData.name}
       />
       {formData.questions.map((question, index) => {
+        const newQuestion =
+          typeof question === "string" ? JSON.parse(question) : question;
+
         return (
-          <FormCard
+          <CardSelector
             key={index}
             id={index}
             registerCard={registerCard}
@@ -150,9 +155,9 @@ export const AnswerForm: React.FC<AnswerFormProps> = ({
                 }
               }}
               isDisable={isDisable}
-              question={JSON.parse(question)}
+              question={newQuestion}
             />
-          </FormCard>
+          </CardSelector>
         );
       })}
       {!isDisable && (

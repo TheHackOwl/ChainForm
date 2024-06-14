@@ -44,3 +44,13 @@ export const getJsonByCid = async <T>(cidString: string): Promise<T> => {
 
   return await j.get(cid);
 };
+
+export const pingCid = async (cidString: string) => {
+  const cid = CID.parse(cidString);
+  const helia = await createHeliaSingleton();
+
+  // 添加 Pin 并处理 AsyncGenerator 返回值
+  for await (const pinnedCid of helia.pins.add(cid)) {
+    console.log(`Pinned CID: ${pinnedCid.toString()}`);
+  }
+};

@@ -9,11 +9,12 @@ import { useQuestions } from "./hooks/useQuestions";
 import { useFormInfo } from "./hooks/useFormInfo";
 
 import { QuestionCardContent } from "@/components/create/question-card-content";
-import { FormCard } from "@/components/form-ui/form-card";
+import { CardSelector } from "@/components/form-ui/card-selector";
 import { FirstCard } from "@/components/create/first-card";
 import { FormDataType, Question } from "@/types/index";
 import { useAggregateRefData, useCardFocus, useRequireConect } from "@/hooks";
 import { ABI, CONTRACT_ADDRESS, CREATE_FORM } from "@/constants/contract";
+import { cardGap } from "@/components/primitives";
 interface FormTabsProps {
   templateData: FormDataType;
 }
@@ -72,6 +73,8 @@ export function FormTabs({ templateData }: FormTabsProps) {
     description: string,
     questions: string[]
   ) => {
+    console.log(name, description, questions);
+
     try {
       await writeContractAsync({
         abi: ABI,
@@ -106,7 +109,7 @@ export function FormTabs({ templateData }: FormTabsProps) {
       onSelectionChange={handleTabsChange}
     >
       <Tab key="questions" title="Questions">
-        <div className="grid gap-y-4">
+        <div className={cardGap()}>
           <FirstCard
             change={updateBaseInfo}
             description={baseInfo.description}
@@ -114,7 +117,7 @@ export function FormTabs({ templateData }: FormTabsProps) {
           />
           {questionList.map((question, index) => {
             return (
-              <FormCard
+              <CardSelector
                 key={question.name + index}
                 id={question.name + index}
                 registerCard={registerCard}
@@ -135,7 +138,7 @@ export function FormTabs({ templateData }: FormTabsProps) {
                   onCopy={copyQuestion}
                   onDelete={deleteQuestion}
                 />
-              </FormCard>
+              </CardSelector>
             );
           })}
 
