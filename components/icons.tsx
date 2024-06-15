@@ -295,3 +295,41 @@ export const AddIcon: React.FC<IconSvgProps> = (props) => {
     </svg>
   );
 };
+
+export const LeftIcon: React.FC<IconSvgProps> = (props) => {
+  return (
+    <svg
+      className="icon"
+      height="40"
+      version="1.1"
+      viewBox="0 0 1024 1024"
+      width="40"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M576 672c-6.4 0-19.2 0-25.6-6.4l-128-128c-12.8-12.8-12.8-32 0-44.8l128-128c12.8-12.8 32-12.8 44.8 0s12.8 32 0 44.8L492.8 512l102.4 102.4c12.8 12.8 12.8 32 0 44.8C595.2 672 582.4 672 576 672z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+};
+
+export const RightIcon: React.FC<IconSvgProps> = (props) => {
+  return (
+    <svg
+      className="icon"
+      height="40"
+      version="1.1"
+      viewBox="0 0 1024 1024"
+      width="40"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M448 672c-6.4 0-19.2 0-25.6-6.4-12.8-12.8-12.8-32 0-44.8L531.2 512 422.4 409.6c-12.8-12.8-12.8-32 0-44.8s32-12.8 44.8 0l128 128c12.8 12.8 12.8 32 0 44.8l-128 128C467.2 672 454.4 672 448 672z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+};

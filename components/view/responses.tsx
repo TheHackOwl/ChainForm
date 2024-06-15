@@ -1,12 +1,8 @@
-import clsx from "clsx";
 import { useReadContract } from "wagmi";
-import { Card, CardBody } from "@nextui-org/card";
-import { Tabs, Tab } from "@nextui-org/tabs";
 import { useEffect } from "react";
 
 import { Individual } from "./individual";
 
-import { subtitle } from "@/components/primitives";
 import { ABI, CONTRACT_ADDRESS, GET_SUBMISSIONS } from "@/constants/contract";
 import { SubmissionType } from "@/types";
 
@@ -35,7 +31,9 @@ export const Responses: React.FC<ResponsesProps> = ({ formId }) => {
 
   return (
     <>
-      <div className={clsx("pl-2", subtitle())}>1 response</div>
+      <Individual submissions={data} />
+
+      {/*
       <Tabs
         aria-label="Options"
         color="primary"
@@ -58,7 +56,7 @@ export const Responses: React.FC<ResponsesProps> = ({ formId }) => {
         <Tab key="individual" title="Individual">
           <Individual submissions={data} />
         </Tab>
-      </Tabs>
+      </Tabs> */}
     </>
   );
 };
