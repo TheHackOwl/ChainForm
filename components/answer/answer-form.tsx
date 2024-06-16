@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Card, CardBody } from "@nextui-org/card";
 import { Button } from "@nextui-org/button";
 import { useAccount, useWriteContract } from "wagmi";
-import { Toaster, toast } from "react-hot-toast";
+import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
 import { AnswerFirstCard } from "@/components/answer/answer-first-card";
@@ -12,7 +12,7 @@ import { saveAnswerForm, generateHash } from "@/app/actions";
 import { ABI, SUBMIT_FORM, CONTRACT_ADDRESS } from "@/constants/contract";
 import { useAggregateRefData, useCardFocus } from "@/hooks/index";
 import { CardSelector } from "@/components/form-ui/card-selector";
-import { useRequireConect } from "@/hooks";
+import { useRequireConnect } from "@/hooks";
 import { cardGap } from "@/components/primitives";
 
 interface CustomError extends Error {
@@ -34,7 +34,7 @@ export const AnswerForm: React.FC<AnswerFormProps> = ({
 
   const [Sending, setSending] = useState(false);
 
-  const { requireConnect } = useRequireConect();
+  const { requireConnect } = useRequireConnect();
 
   const { writeContractAsync } = useWriteContract();
 
@@ -169,8 +169,6 @@ export const AnswerForm: React.FC<AnswerFormProps> = ({
           </CardBody>
         </Card>
       )}
-
-      <Toaster />
     </div>
   );
 };

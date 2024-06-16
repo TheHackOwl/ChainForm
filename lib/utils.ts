@@ -21,3 +21,38 @@ export function insertAt<T>(array: T[], index: number, item: T): T[] {
 
   return newArray;
 }
+
+/**
+ * 将时间戳转换为 yyyy-mm-dd 格式的日期字符串
+ * @param timestamp - 时间戳（毫秒）
+ * @returns 格式化的日期字符串
+ */
+export function formatTimestampToDate(timestamp: number): string {
+  const date = new Date(timestamp);
+
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, "0"); // 月份从0开始，所以加1
+  const day = date.getDate().toString().padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
+/**
+ * 简写地址，只保留前6后4
+ * @param address
+ * @returns
+ */
+export function abbreviateAddress(address: string): string {
+  // 判断是否为有效的地址
+  if (!address || address.length <= 10) {
+    return address;
+  }
+
+  // 取前六个字符（包括0x）和最后四个字符
+  const firstSix = address.substring(0, 6);
+  const lastIndex = address.length - 4;
+  const lastFour = address.substring(lastIndex);
+
+  // 返回结果
+  return `${firstSix}...${lastFour}`;
+}

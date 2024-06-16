@@ -1,6 +1,13 @@
 import { useState } from "react";
 
-export const useOptions = (initialOptions: string[] = []) => {
+export interface optionsProps {
+  options: string[];
+  updateOptions: (options: string[]) => void;
+  updateOptionValue: (index: number, value: string) => void;
+  addOption: () => void;
+}
+
+export const useOptions = (initialOptions: string[] = []): optionsProps => {
   const [options, setOptions] = useState<string[]>(initialOptions);
 
   /**

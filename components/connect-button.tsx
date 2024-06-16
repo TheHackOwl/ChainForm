@@ -1,8 +1,16 @@
 "use client";
-
+import { useState } from "react";
 import { ConnectButton as WalletConnectButton } from "@rainbow-me/rainbowkit";
 import { Button } from "@nextui-org/button";
+
+import { Sidebar } from "@/components/sidebar";
+
 export const ConnectButton = () => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
   return (
     <WalletConnectButton.Custom>
       {({
@@ -63,7 +71,8 @@ export const ConnectButton = () => {
                   <Button
                     color="primary"
                     type="button"
-                    onClick={openAccountModal}
+                    // onClick={openAccountModal}
+                    onClick={toggleSidebar}
                   >
                     {account.displayName}
                     {account.displayBalance
@@ -73,6 +82,7 @@ export const ConnectButton = () => {
                 </div>
               );
             })()}
+            <Sidebar isOpen={isSidebarOpen} onClose={toggleSidebar} />
           </div>
         );
       }}

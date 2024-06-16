@@ -1,9 +1,9 @@
 "use client";
 import React, { useEffect } from "react";
 import { Card, CardBody } from "@nextui-org/card";
-import { Pagination } from "@nextui-org/pagination";
 
 import { useIndividualFormData } from "./hooks/useIndivualFormData";
+import { SurveyNavigator } from "./surveyNavigator";
 
 import { AnswerForm } from "@/components/answer/answer-form";
 import { cardGap } from "@/components/primitives";
@@ -18,22 +18,17 @@ export const Individual: React.FC<IndividualProps> = ({ submissions }) => {
     useIndividualFormData(submissions, 1);
 
   useEffect(() => {
-    if (currentFormData) {
-      currentFormData.originalFormID;
-    }
+    console.log(currentFormData);
   }, [currentFormData]);
 
   return (
     <div className={cardGap()}>
       <Card>
         <CardBody className="flex items-center justify-center">
-          <Pagination
-            showControls
-            initialPage={1}
-            total={submissions.length}
-            onChange={(page) => {
-              setIndividualIndex(page);
-            }}
+          <SurveyNavigator
+            initialSurvey={currentIndex}
+            totalSurveys={submissions.length}
+            onSurveyChange={(val) => setIndividualIndex(val)}
           />
         </CardBody>
       </Card>

@@ -1,9 +1,5 @@
-import { MyForms } from "@/components/form/my-forms";
+import { OwnedForms } from "@/components/form/owned-forms";
 
 export default function FormsPage() {
-  return (
-    <div>
-      <MyForms />
-    </div>
-  );
+  return <OwnedForms />;
 }

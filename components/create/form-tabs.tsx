@@ -8,11 +8,12 @@ import React, { useState } from "react";
 import { useQuestions } from "./hooks/useQuestions";
 import { useFormInfo } from "./hooks/useFormInfo";
 
+import { Settings } from "@/components/settings/settings";
 import { QuestionCardContent } from "@/components/create/question-card-content";
 import { CardSelector } from "@/components/form-ui/card-selector";
 import { FirstCard } from "@/components/create/first-card";
 import { FormDataType, Question } from "@/types/index";
-import { useAggregateRefData, useCardFocus, useRequireConect } from "@/hooks";
+import { useAggregateRefData, useCardFocus, useRequireConnect } from "@/hooks";
 import { ABI, CONTRACT_ADDRESS, CREATE_FORM } from "@/constants/contract";
 import { cardGap } from "@/components/primitives";
 interface FormTabsProps {
@@ -20,13 +21,13 @@ interface FormTabsProps {
 }
 
 export function FormTabs({ templateData }: FormTabsProps) {
-  const { requireConnect } = useRequireConect();
+  const { requireConnect } = useRequireConnect();
 
   const { writeContractAsync } = useWriteContract();
 
   const [isSave, setIsSave] = useState(true); // 每次切换tab，是否保存了数据
 
-  const [Sending, setSending] = useState(false);
+  const [sending, setSending] = useState(false);
 
   const { refs: questionRefs, aggregateData } = useAggregateRefData<Question>();
 
@@ -146,7 +147,7 @@ export function FormTabs({ templateData }: FormTabsProps) {
             <CardBody>
               <Button
                 color="primary"
-                isLoading={Sending}
+                isLoading={sending}
                 onClick={handlePublish}
               >
                 Send
@@ -155,23 +156,8 @@ export function FormTabs({ templateData }: FormTabsProps) {
           </Card>
         </div>
       </Tab>
-      <Tab key="excitation" title="Excitation">
-        <Card>
-          <CardBody>
-            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
-            nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur.
-          </CardBody>
-        </Card>
-      </Tab>
-      <Tab key="setting" title="Setting">
-        <Card>
-          <CardBody>
-            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
-            officia deserunt mollit anim id est laborum.
-          </CardBody>
-        </Card>
+      <Tab key="settings" title="Settings">
+        <Settings />
       </Tab>
     </Tabs>
   );

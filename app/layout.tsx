@@ -1,6 +1,7 @@
 import "@/styles/globals.css";
 import { Metadata, Viewport } from "next";
 import clsx from "clsx";
+import { Toaster } from "react-hot-toast";
 
 import { Providers } from "./providers";
 
@@ -36,18 +37,19 @@ export default function RootLayout({
       <head />
       <body
         className={clsx(
-          "min-h-screen bg-background font-sans antialiased",
+          "min-h-screen bg-background font-sans antialiased no-scrollbar",
           fontSans.variable
         )}
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
           <div className="relative flex flex-col h-screen">
             <Navbar />
-            <main className="container mx-auto max-w-7xl pt-8 px-6 flex-grow">
+            <main className="container mx-auto max-w-6xl pt-8 px-6 flex-grow">
               {children}
             </main>
           </div>
         </Providers>
+        <Toaster />
       </body>
     </html>
   );

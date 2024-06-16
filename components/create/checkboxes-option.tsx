@@ -2,7 +2,7 @@ import { Checkbox } from "@nextui-org/checkbox";
 import { Input } from "@nextui-org/input";
 import { Button } from "@nextui-org/button";
 
-import { optionsProps } from "./type";
+import { optionsProps } from "./hooks/useOptions";
 
 import { DeleteIcon } from "@/components/icons";
 
