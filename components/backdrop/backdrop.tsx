@@ -34,3 +34,5 @@ export const Backdrop: React.FC<BackdropProps> = ({
     document.querySelector("body") as HTMLElement
   );
 };
+
+export default Backdrop;

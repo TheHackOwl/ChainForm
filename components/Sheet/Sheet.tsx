@@ -4,7 +4,7 @@ import ReactDOM from "react-dom";
 import clsx from "clsx";
 import { Card, CardBody } from "@nextui-org/card";
 
-import { Backdrop } from "@/components/backdrop";
+import { DynamicBackdrop } from "@/components/backdrop";
 import { RightArrowIcon } from "@/components/icons";
 interface SheetProps {
   className?: string;
@@ -48,8 +48,10 @@ export const Sheet: React.FC<SheetProps> = ({
       <Card className="w-96 h-full" radius="none" shadow="lg">
         <CardBody className="p-0">{children}</CardBody>
       </Card>
-      <Backdrop isVisible={isOpen} onClick={onClose} />
+      <DynamicBackdrop isVisible={isOpen} onClick={onClose} />
     </div>,
     document.querySelector("body") as HTMLElement
   );
 };
+
+export default Sheet;
