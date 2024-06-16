@@ -6,7 +6,7 @@ import { Avatar } from "@nextui-org/avatar";
 import { toast } from "react-hot-toast";
 
 import { abbreviateAddress } from "@/lib/utils";
-import { Sheet } from "@/components/Sheet";
+import { DynamicSheet } from "@/components/Sheet";
 import { CopyIcon, LogOutIcon } from "@/components/icons";
 interface SidebarProps {
   isOpen: boolean;
@@ -50,7 +50,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   };
 
   return (
-    <Sheet isOpen={isOpen} onClose={onClose}>
+    <DynamicSheet isOpen={isOpen} onClose={onClose}>
       <div className="h-56 bg-indigo-500  p-4 rounded-b-2xl bg-[url('/images/top-bg.png')] bg-cover">
         {address && (
           <>
@@ -97,6 +97,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           </>
         )}
       </div>
-    </Sheet>
+    </DynamicSheet>
   );
 };
