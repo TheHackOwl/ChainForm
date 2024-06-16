@@ -9,6 +9,7 @@ import { Responses } from "./responses";
 import { AnswerForm } from "@/components/answer/answer-form";
 import { FormDataType } from "@/types";
 import { ABI, CONTRACT_ADDRESS, GET_FORM } from "@/constants/contract";
+import { withWallet } from "@/components/hoc/withWallet";
 
 interface UseReadContractReturnType {
   readonly data: FormDataType | undefined;
@@ -19,7 +20,7 @@ interface ViewTabsProps {
   id: string;
 }
 
-export const ViewTabs: React.FC<ViewTabsProps> = ({ id }) => {
+const ViewTabsWappedComponent: React.FC<ViewTabsProps> = ({ id }) => {
   const { data: formData }: UseReadContractReturnType = useReadContract({
     abi: ABI,
     address: CONTRACT_ADDRESS,
@@ -49,3 +50,5 @@ export const ViewTabs: React.FC<ViewTabsProps> = ({ id }) => {
     </Tabs>
   );
 };
+
+export const ViewTabs = withWallet<ViewTabsProps>(ViewTabsWappedComponent);

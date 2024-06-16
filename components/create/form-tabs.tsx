@@ -13,7 +13,7 @@ import { QuestionCardContent } from "@/components/create/question-card-content";
 import { CardSelector } from "@/components/form-ui/card-selector";
 import { FirstCard } from "@/components/create/first-card";
 import { FormDataType, Question } from "@/types/index";
-import { useAggregateRefData, useCardFocus, useRequireConect } from "@/hooks";
+import { useAggregateRefData, useCardFocus, useRequireConnect } from "@/hooks";
 import { ABI, CONTRACT_ADDRESS, CREATE_FORM } from "@/constants/contract";
 import { cardGap } from "@/components/primitives";
 interface FormTabsProps {
@@ -21,7 +21,7 @@ interface FormTabsProps {
 }
 
 export function FormTabs({ templateData }: FormTabsProps) {
-  const { requireConnect } = useRequireConect();
+  const { requireConnect } = useRequireConnect();
 
   const { writeContractAsync } = useWriteContract();
 
