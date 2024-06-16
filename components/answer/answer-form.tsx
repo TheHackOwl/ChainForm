@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from "react";
 import { Card, CardBody } from "@nextui-org/card";
 import { Button } from "@nextui-org/button";
