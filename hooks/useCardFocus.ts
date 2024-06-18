@@ -15,15 +15,15 @@ export const useCardFocus = (): UseCardFocusReturn => {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      const clickedInsideAnotherCard = Object.entries(cardRefs.current).some(
+      const targetRef = Object.entries(cardRefs.current).find(
         ([id, ref]) =>
           ref &&
           ref.contains(event.target as Node) &&
           parseInt(id) !== selectedCard,
       );
 
-      if (clickedInsideAnotherCard) {
-        setSelectedCard(null);
+      if (targetRef) {
+        setSelectedCard(targetRef[0]);
       }
     };
 
@@ -35,6 +35,8 @@ export const useCardFocus = (): UseCardFocusReturn => {
   }, []);
 
   const registerCard = useCallback((ref: HTMLElement | null, id: Id) => {
+    console.log(id, "id");
+
     cardRefs.current[id] = ref;
   }, []);
 
@@ -42,5 +44,10 @@ export const useCardFocus = (): UseCardFocusReturn => {
     delete cardRefs.current[id];
   }, []);
 
-  return { selectedCard, setSelectedCard, registerCard, removeCard };
+  return {
+    selectedCard,
+    setSelectedCard,
+    registerCard,
+    removeCard,
+  };
 };

@@ -43,7 +43,7 @@ const OwnedFormsWrappedComponent: React.FC<OwnedFormsProps> = () => {
       {data &&
         data.map((item, index) => (
           <FormInfoCard key={index} id={item}>
-            <CardFooter className="gap-2">
+            <CardFooter className="gap-6">
               <ShareButton
                 className="flex-1"
                 onClick={() => {

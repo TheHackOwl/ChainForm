@@ -44,12 +44,8 @@ export const CardSelector: React.FC<CardSelectorProps> = ({
   }, [registerCard, removeCard, id]);
 
   useEffect(() => {
-    setSelected(() => selectedCard === id);
+    setSelected(() => selectedCard === id.toString());
   }, [selectedCard, id]);
-
-  const handleFocus = () => {
-    setSelectedCard(id);
-  };
 
   // 过滤并克隆子组件，确保只克隆有效的 ReactElement
   const clonedChildren = React.Children.map(children, (child) => {
@@ -62,9 +58,5 @@ export const CardSelector: React.FC<CardSelectorProps> = ({
     return child; // 如果不是有效的 ReactElement，则原样返回
   });
 
-  return (
-    <div ref={ref} onFocus={handleFocus}>
-      {clonedChildren}
-    </div>
-  );
+  return <div ref={ref}>{clonedChildren}</div>;
 };

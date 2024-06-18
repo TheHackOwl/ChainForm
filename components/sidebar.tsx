@@ -1,12 +1,12 @@
 // Sidebar.tsx
 import React, { useState, useEffect } from "react";
-import { useDisconnect, useAccount, useBalance } from "wagmi";
+import { useDisconnect, useAccount, useBalance, useChainId } from "wagmi";
 import { Button } from "@nextui-org/button";
 import { Avatar } from "@nextui-org/avatar";
 import { toast } from "react-hot-toast";
 
 import { abbreviateAddress } from "@/lib/utils";
-import { DynamicSheet } from "@/components/Sheet";
+import { DynamicSheet } from "@/components/sheet";
 import { CopyIcon, LogOutIcon } from "@/components/icons";
 interface SidebarProps {
   isOpen: boolean;
@@ -15,6 +15,7 @@ interface SidebarProps {
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
+  const chainId = useChainId();
   const [icon, setIcon] = useState<string>("");
   const { disconnect } = useDisconnect();
   const { address, connector, status, chain } = useAccount();
@@ -26,7 +27,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
     if (connector && connector.rkDetails) {
       getIcon();
     }
-  }, [connector]);
+  }, [connector, chainId]);
 
   const getIcon = async () => {
     if (connector && connector.rkDetails) {
