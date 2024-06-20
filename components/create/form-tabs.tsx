@@ -29,7 +29,6 @@ import {
   APPROVE,
   MY_TOKNE_ADDRESS,
 } from "@/constants/contract/myToken";
-import { FIXEDREWARD_ADDRESS } from "@/constants/contract/fixedReward";
 import { cardGap } from "@/components/primitives";
 interface FormTabsProps {
   templateData: FormDataType;
@@ -67,6 +66,10 @@ export function FormTabs({ templateData }: FormTabsProps) {
   const { selectedCard, setSelectedCard, registerCard, removeCard } =
     useCardFocus();
 
+  const [rewardLogic, setRewardLogic] = useState<`0x${string}`>(
+    templateData.settings.rewardLogic
+  );
+
   /**
    * 发布函数
    */
@@ -86,7 +89,7 @@ export function FormTabs({ templateData }: FormTabsProps) {
       const settings: SettingsType = {
         expireAt: BigInt(expireAt),
         rewardRule,
-        rewardLogic: FIXEDREWARD_ADDRESS,
+        rewardLogic: rewardLogic,
       };
 
       const createFormTxHash = await callCreateForm(
@@ -179,7 +182,7 @@ export function FormTabs({ templateData }: FormTabsProps) {
       fullWidth={true}
       selectedKey={currentTab}
     >
-      <Tab key={tabKeys[0]} title="Step1: Questions">
+      <Tab key={tabKeys[0]} title="Questions">
         <div className={cardGap()}>
           <FirstCard
             change={updateBaseInfo}
@@ -236,13 +239,14 @@ export function FormTabs({ templateData }: FormTabsProps) {
           </Card>
         </div>
       </Tab>
-      <Tab key="settings" title="Step2: Settings">
+      <Tab key="settings" title="Settings">
         <Settings
           disabled={false}
           expireAt={expireAt}
           rewardRule={rewardRule}
           setExpireAt={setExpireAt}
           setInitSettings={setInitSettings}
+          setRewardLogic={setRewardLogic}
           setToken={setToken}
         />
         <Card className="mt-4">

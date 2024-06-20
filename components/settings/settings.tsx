@@ -11,6 +11,7 @@ interface SettingsProps {
   setExpireAt?: (expireAt: number) => void;
   setInitSettings?: (intSettings: IntSettings) => void;
   setToken?: (token: Token) => void;
+  setRewardLogic?: (address: `0x${string}`) => void;
 }
 
 export const Settings: React.FC<SettingsProps> = ({
@@ -20,6 +21,7 @@ export const Settings: React.FC<SettingsProps> = ({
   setExpireAt = () => {},
   setToken = () => {},
   setInitSettings = () => {},
+  setRewardLogic = () => {},
 }) => {
   return (
     <div className={cardGap()}>
@@ -32,6 +34,7 @@ export const Settings: React.FC<SettingsProps> = ({
         disabled={disabled}
         rewardRule={rewardRule}
         setInitSettings={setInitSettings}
+        setRewardLogic={setRewardLogic}
         setToken={setToken}
       />
     </div>
