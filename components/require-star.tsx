@@ -1,12 +1,18 @@
+import React from "react";
 import clsx from "clsx";
-export const RequireStar = (props: any) => {
-  const { className } = props;
 
-  const classes = clsx("text-red-500", className);
+interface RequireStarProps {
+  className?: string;
+  isDisabled?: boolean;
+}
+export const RequireStar: React.FC<RequireStarProps> = ({
+  className,
+  isDisabled,
+}) => {
+  const classes = clsx("text-xs align-top", className, {
+    "text-red-500": !isDisabled,
+    "text-red-500/50": isDisabled,
+  });
 
-  return (
-    <span {...props} className={classes}>
-      *
-    </span>
-  );
+  return <span className={classes}>*</span>;
 };

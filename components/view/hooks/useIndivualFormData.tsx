@@ -25,6 +25,7 @@ export const useIndividualFormData = (
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
+    if (submissions.length === 0) return;
     fetchSubmissionData(submissions[currentIndex - 1].cid);
   }, []);
 
@@ -35,6 +36,7 @@ export const useIndividualFormData = (
    * @param {number} index - The index of the individual submission to be set. 要设置的提交索引。
    */
   const setIndividualIndex = (index: number) => {
+    if (submissions.length === 0) return;
     if (formDataList[index - 1]) {
       setCurrentFormData(formDataList[index - 1]);
     } else {

@@ -10,8 +10,11 @@ import { AnswerFirstCard } from "@/components/answer/answer-first-card";
 import { AnserCard } from "@/components/answer/answer-card";
 import { FormDataType, Question, AnswerFormType } from "@/types";
 import { saveAnswerForm, generateHash } from "@/app/actions";
-import { ABI, SUBMIT_FORM, CONTRACT_ADDRESS } from "@/constants/contract";
-import { useAggregateRefData, useCardFocus } from "@/hooks/index";
+import {
+  CHAINFORM_ABI,
+  CHAINFORM_ADDRESS,
+} from "@/constants/contract/chainForm";
+import { useAggregateRefsData, useCardFocus } from "@/hooks/index";
 import { CardSelector } from "@/components/form-ui/card-selector";
 import { useRequireConnect } from "@/hooks";
 import { cardGap } from "@/components/primitives";
@@ -21,7 +24,7 @@ interface CustomError extends Error {
 }
 
 interface AnswerFormProps {
-  formData: FormDataType;
+  formData: FormDataType | AnswerFormType;
   isDisable: boolean;
   formId: string;
 }
@@ -45,7 +48,7 @@ export const AnswerForm: React.FC<AnswerFormProps> = ({
     refs: questionRefs,
     aggregateData,
     checkAllComponentsStatus,
-  } = useAggregateRefData<Question>();
+  } = useAggregateRefsData<Question>();
 
   const { selectedCard, setSelectedCard, registerCard, removeCard } =
     useCardFocus();
@@ -99,13 +102,11 @@ export const AnswerForm: React.FC<AnswerFormProps> = ({
     try {
       const _formId = BigInt(formId);
 
-      console.log(cid, "cid");
-
       await writeContractAsync({
-        abi: ABI,
-        address: CONTRACT_ADDRESS,
+        abi: CHAINFORM_ABI,
+        address: CHAINFORM_ADDRESS,
         account: address,
-        functionName: SUBMIT_FORM,
+        functionName: "submitForm",
         args: [_formId, dataHash, cid],
       });
     } catch (error: any) {

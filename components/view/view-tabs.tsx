@@ -1,30 +1,37 @@
 "use client";
 import React from "react";
 import { Tabs, Tab } from "@nextui-org/tabs";
-import { Card, CardBody } from "@nextui-org/card";
 import { useReadContract } from "wagmi";
 
 import { Responses } from "./responses";
 
+import { Settings } from "@/components/settings/settings";
 import { AnswerForm } from "@/components/answer/answer-form";
-import { FormDataType } from "@/types";
-import { ABI, CONTRACT_ADDRESS, GET_FORM } from "@/constants/contract";
+import { FormDataType, RewardRule } from "@/types";
+import {
+  CHAINFORM_ABI,
+  CHAINFORM_ADDRESS,
+} from "@/constants/contract/chainForm";
 import { withWallet } from "@/components/hoc/withWallet";
 
 interface UseReadContractReturnType {
   readonly data: FormDataType | undefined;
-  // 其他属性
 }
 
 interface ViewTabsProps {
   id: string;
 }
 
+const rewardRule: RewardRule = {
+  intSettings: [BigInt(1), BigInt(1)],
+  token: "0xdd9e5Be4d9c2B921f242AF8a3b095AfC8CcE6475)",
+};
+
 const ViewTabsWappedComponent: React.FC<ViewTabsProps> = ({ id }) => {
   const { data: formData }: UseReadContractReturnType = useReadContract({
-    abi: ABI,
-    address: CONTRACT_ADDRESS,
-    functionName: GET_FORM,
+    abi: CHAINFORM_ABI,
+    address: CHAINFORM_ADDRESS,
+    functionName: "getForm",
     args: [BigInt(id)],
   });
 
@@ -39,13 +46,8 @@ const ViewTabsWappedComponent: React.FC<ViewTabsProps> = ({ id }) => {
       <Tab key="responses" title="Responses">
         <Responses formId={id} />
       </Tab>
-      <Tab key="setting" title="Setting">
-        <Card>
-          <CardBody>
-            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
-            officia deserunt mollit anim id est laborum.
-          </CardBody>
-        </Card>
+      <Tab key="setting" title="Settings">
+        <Settings disabled={true} rewardRule={rewardRule} />
       </Tab>
     </Tabs>
   );

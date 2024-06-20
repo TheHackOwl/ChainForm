@@ -3,7 +3,11 @@ import { useEffect, useState } from "react";
 import { useReadContract } from "wagmi";
 
 import { AnswerForm } from "@/components/answer/answer-form";
-import { ABI, CONTRACT_ADDRESS, GET_FORM } from "@/constants/contract";
+import {
+  CHAINFORM_ABI,
+  CHAINFORM_ADDRESS,
+  GET_FORM,
+} from "@/constants/contract/chainForm";
 import { FormDataType } from "@/types";
 
 interface UseReadContractReturnType {
@@ -18,8 +22,8 @@ export default function AnswerPage({
 }>) {
   const [formId, setFormId] = useState<string>(params.id);
   const { data, isLoading }: UseReadContractReturnType = useReadContract({
-    abi: ABI,
-    address: CONTRACT_ADDRESS,
+    abi: CHAINFORM_ABI,
+    address: CHAINFORM_ADDRESS,
     functionName: GET_FORM,
     args: [BigInt(params.id)],
   });
