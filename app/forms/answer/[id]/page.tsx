@@ -6,7 +6,6 @@ import { AnswerForm } from "@/components/answer/answer-form";
 import {
   CHAINFORM_ABI,
   CHAINFORM_ADDRESS,
-  GET_FORM,
 } from "@/constants/contract/chainForm";
 import { FormDataType } from "@/types";
 
@@ -24,7 +23,7 @@ export default function AnswerPage({
   const { data, isLoading }: UseReadContractReturnType = useReadContract({
     abi: CHAINFORM_ABI,
     address: CHAINFORM_ADDRESS,
-    functionName: GET_FORM,
+    functionName: "getForm",
     args: [BigInt(params.id)],
   });
 
