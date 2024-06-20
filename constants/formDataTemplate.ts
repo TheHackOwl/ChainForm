@@ -7,9 +7,24 @@ import {
 
 import { FIXEDREWARD_ADDRESS } from "./contract/fixedReward";
 
-import { FormDataType } from "@/types";
+import { FormDataType, SettingsType } from "@/types";
 
 export const getFormDataTemplate = (): FormDataType => {
+  return {
+    name: "Untitled form",
+    description: "",
+    questions: [
+      {
+        type: "multipleChoice",
+        name: "Untitled Question",
+        options: ["Option 1"],
+        required: false,
+      },
+    ],
+  };
+};
+
+export const getSettingsTemplate = (): SettingsType => {
   // 获取当前时区
   const timeZone = getLocalTimeZone();
 
@@ -25,23 +40,11 @@ export const getFormDataTemplate = (): FormDataType => {
   const timestamp = zonedSpecifiedTime.toDate().getTime();
 
   return {
-    name: "Untitled form",
-    description: "",
-    questions: [
-      {
-        type: "multipleChoice",
-        name: "Untitled Question",
-        options: ["Option 1"],
-        required: false,
-      },
-    ],
-    settings: {
-      expireAt: BigInt(timestamp),
-      rewardLogic: FIXEDREWARD_ADDRESS,
-      rewardRule: {
-        intSettings: [BigInt(1000000000), BigInt(10)],
-        token: "0xdd9e5Be4d9c2B921f242AF8a3b095AfC8CcE6475",
-      },
+    expireAt: BigInt(timestamp),
+    rewardLogic: FIXEDREWARD_ADDRESS,
+    rewardRule: {
+      intSettings: [BigInt(1000000000), BigInt(10)],
+      token: "0xdd9e5Be4d9c2B921f242AF8a3b095AfC8CcE6475",
     },
   };
 };

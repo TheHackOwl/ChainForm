@@ -3,7 +3,7 @@ import { useState } from "react";
 import { ConnectButton as WalletConnectButton } from "@rainbow-me/rainbowkit";
 import { Button } from "@nextui-org/button";
 
-import { Sidebar } from "@/components/sidebar";
+import { Sidebar } from "@/components/sidebar/index";
 
 export const ConnectButton = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);

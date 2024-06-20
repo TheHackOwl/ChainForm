@@ -3,13 +3,13 @@ import { AnswerType } from "@/constants/index";
 export interface FormBaseInfo {
   name: string;
   description: string;
+  createdAt?: bigint;
+  creator?: `0x${string}`;
 }
 
 export interface FormDataType extends FormBaseInfo {
-  createdAt?: bigint;
-  creator?: `0x${string}`;
   questions: Question[];
-  settings: SettingsType;
+  // settings: SettingsType;
 }
 
 export type SettingsType = {

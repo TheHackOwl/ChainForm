@@ -68,6 +68,8 @@ export const useRewardOptions = (
       contracts: cintracts,
     });
 
+    console.log(rewardOptions, "rewardOptions");
+
     setRewardOptions(() => {
       return rewardOptions.map((item, index) => {
         const { name, argsDescription, argsNumber, description } = item.result!;

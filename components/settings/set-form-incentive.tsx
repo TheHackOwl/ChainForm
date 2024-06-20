@@ -2,7 +2,8 @@
 import React from "react";
 
 import { IncentiveSelector } from "./incentive-selector";
-import { FixedIncentiveInput } from "./fixed-incentive-input";
+import { PersonNumberInput } from "./person-number-input";
+import { RateInput } from "./rate-input";
 import { useIntSettings } from "./hooks/useIntSettings";
 import { useRewardOptions } from "./hooks/useRewardOptions";
 
@@ -51,24 +52,27 @@ export const SetFormIncentive: React.FC<SetFormIncentiveProps> = ({
         <div className="flex-1">
           {[2, 3].includes(selectedRewardType) && (
             // <EthInput value={amount} onChange={setAmount} />
-            <CryptoInput
-              isRequired
-              color="primary"
-              decimalPlaces={9}
-              isDisabled={disabled}
-              label="Amount by each user"
-              placeholder="Enter amount"
-              value={amount}
-              variant="underlined"
-              onValueChange={setAmount}
-            />
+            <>
+              <CryptoInput
+                isRequired
+                color="primary"
+                decimalPlaces={9}
+                isDisabled={disabled}
+                label="Amount by each person"
+                placeholder="Enter amount"
+                value={amount}
+                variant="underlined"
+                onValueChange={setAmount}
+              />
+              <PersonNumberInput
+                isDisabled={disabled}
+                value={users}
+                onChange={setUsers}
+              />
+            </>
           )}
-          {selectedRewardType === 2 && (
-            <FixedIncentiveInput
-              isDisabled={disabled}
-              value={users}
-              onChange={setUsers}
-            />
+          {selectedRewardType === 3 && (
+            <RateInput isDisabled={disabled} value={"0"} onChange={setAmount} />
           )}
         </div>
       </div>

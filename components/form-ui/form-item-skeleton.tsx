@@ -33,7 +33,7 @@ export const FormItemSkeleton = memo(() => {
           </Skeleton>
         </div>
       </CardBody>
-      <CardFooter className="flex gap-4">
+      <CardFooter className="flex gap-8">
         <Skeleton className="flex-1 rounded-lg">
           <Button isDisabled className="flex-1" variant="bordered" />
         </Skeleton>

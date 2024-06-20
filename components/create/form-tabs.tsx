@@ -32,9 +32,10 @@ import {
 import { cardGap } from "@/components/primitives";
 interface FormTabsProps {
   templateData: FormDataType;
+  settings: SettingsType;
 }
 
-export function FormTabs({ templateData }: FormTabsProps) {
+export function FormTabs({ templateData, settings }: FormTabsProps) {
   const config = useConfig();
   const router = useRouter();
   const { currentTab, toNextStep, toPreviousStep } = useTabsKey();
@@ -56,18 +57,18 @@ export function FormTabs({ templateData }: FormTabsProps) {
   } = useQuestions(templateData.questions);
 
   const { rewardRule, intSettings, setInitSettings, setToken } = useRewardRule(
-    templateData.settings.rewardRule
+    settings.rewardRule
   );
 
   const [expireAt, setExpireAt] = useState<number>(() =>
-    Number(templateData.settings.expireAt)
+    Number(settings.expireAt)
   );
 
   const { selectedCard, setSelectedCard, registerCard, removeCard } =
     useCardFocus();
 
   const [rewardLogic, setRewardLogic] = useState<`0x${string}`>(
-    templateData.settings.rewardLogic
+    settings.rewardLogic
   );
 
   /**

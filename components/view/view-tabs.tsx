@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Tabs, Tab } from "@nextui-org/tabs";
 import { useReadContract } from "wagmi";
 
@@ -14,29 +14,36 @@ import {
 } from "@/constants/contract/chainForm";
 import { withWallet } from "@/components/hoc/withWallet";
 
-interface UseReadContractReturnType {
-  readonly data: FormDataType | undefined;
-}
-
 interface ViewTabsProps {
   id: string;
 }
 
-const rewardRule: RewardRule = {
-  intSettings: [BigInt(1), BigInt(1)],
-  token: "0xdd9e5Be4d9c2B921f242AF8a3b095AfC8CcE6475)",
-};
-
 const ViewTabsWappedComponent: React.FC<ViewTabsProps> = ({ id }) => {
-  const { data: formData }: UseReadContractReturnType = useReadContract({
+  const { data } = useReadContract({
     abi: CHAINFORM_ABI,
     address: CHAINFORM_ADDRESS,
     functionName: "getForm",
     args: [BigInt(id)],
   });
 
+  const [formData, setFromData] = useState<FormDataType | null>(null);
+  const [rewardRule, setRewardRule] = useState<RewardRule | null>(null);
+  const [expireAt, setExpireAt] = useState<number>();
+
+  useEffect(() => {
+    if (data) {
+      const newFormData: FormDataType = {
+        ...data[0],
+        questions: data[0].questions.map((item) => JSON.parse(item)),
+      };
+
+      setFromData(newFormData);
+      setExpireAt(Number(data[1].expireAt));
+      setRewardRule(data[1].rewardRule as RewardRule);
+    }
+  }, [data]);
   // Todo: 加载动画
-  if (!formData) return null;
+  if (!rewardRule || !formData) return null;
 
   return (
     <Tabs aria-label="Options" className="relative" color="primary">
@@ -47,7 +54,13 @@ const ViewTabsWappedComponent: React.FC<ViewTabsProps> = ({ id }) => {
         <Responses formId={id} />
       </Tab>
       <Tab key="setting" title="Settings">
-        <Settings disabled={true} rewardRule={rewardRule} />
+        {expireAt && (
+          <Settings
+            disabled={true}
+            expireAt={expireAt}
+            rewardRule={rewardRule}
+          />
+        )}
       </Tab>
     </Tabs>
   );
