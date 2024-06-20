@@ -1,3 +1,6 @@
+"use client";
+import React from "react";
+
 export default function Page() {
-  return <div>1</div>;
+  return <div className="p-4" />;
 }

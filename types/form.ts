@@ -3,13 +3,29 @@ import { AnswerType } from "@/constants/index";
 export interface FormBaseInfo {
   name: string;
   description: string;
+  createdAt?: bigint;
+  creator?: `0x${string}`;
 }
 
 export interface FormDataType extends FormBaseInfo {
-  createdAt?: bigint;
-  creator?: `0x${string}`;
   questions: Question[];
+  // settings: SettingsType;
 }
+
+export type SettingsType = {
+  rewardRule: RewardRule;
+  rewardLogic: `0x${string}`;
+  expireAt: bigint;
+};
+
+export type RewardRule = {
+  intSettings: IntSettings;
+  token: Token;
+};
+
+export type IntSettings = bigint[];
+
+export type Token = `0x${string}`;
 
 export interface Question {
   type: AnswerType;
@@ -32,4 +48,5 @@ export interface SubmissionType {
 export interface AnswerFormType extends FormBaseInfo {
   originalFormID: string;
   questions: Question[];
+  // settings?: SettingsType;
 }

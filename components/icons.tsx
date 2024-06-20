@@ -1,4 +1,5 @@
 import * as React from "react";
+import clsx from "clsx";
 
 import { IconSvgProps } from "@/types";
 
@@ -536,6 +537,30 @@ export const LogOutIcon: React.FC<IconSvgProps> = (props) => {
       <path
         d="M490.666667 157.866667a29.866667 29.866667 0 1 0 0-59.733334H312.490667c-79.701333 0-147.456 59.605333-155.178667 139.690667C149.546667 318.378667 140.8 427.690667 140.8 512c0 84.266667 8.746667 193.621333 16.512 274.176 7.722667 80.085333 75.477333 139.690667 155.178667 139.690667H490.666667a29.866667 29.866667 0 1 0 0-59.733334H312.490667A95.402667 95.402667 0 0 1 216.746667 780.373333C209.024 700.074667 200.533333 593.152 200.533333 512c0-81.194667 8.533333-188.117333 16.213334-268.416a95.402667 95.402667 0 0 1 95.744-85.76H490.666667z m380.757333 372.224a25.6 25.6 0 0 0 0-36.224l-170.666667-170.666667a25.6 25.6 0 1 0-36.181333 36.224l122.709333 122.709333H355.541333a29.866667 29.866667 0 1 0 0 59.733334h431.701334l-122.709334 122.666666a25.6 25.6 0 0 0 36.224 36.224l170.666667-170.666666z"
         fill="#ffffff"
+      />
+    </svg>
+  );
+};
+
+export const CompleteIcon: React.FC<IconSvgProps> = (props) => {
+  const classes = clsx("", props.className);
+
+  return (
+    <svg
+      className={classes}
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      viewBox="0 0 24 24"
+      {...props}
+    >
+      <path
+        d="M5 13l4 4L19 7"
+        pathLength="1"
+        strokeDasharray="1px 1px"
+        strokeDashoffset="0px"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );

@@ -8,7 +8,10 @@ import { Button } from "@nextui-org/button";
 import { FormInfoCard } from "./form-info-card";
 import { useShare } from "./hooks";
 
-import { ABI, GET_MY_FORMS, CONTRACT_ADDRESS } from "@/constants/contract";
+import {
+  CHAINFORM_ABI,
+  CHAINFORM_ADDRESS,
+} from "@/constants/contract/chainForm";
 import { ShareButton } from "@/components/form/share-button";
 import { FormsSkeleton } from "@/components/form-ui/forms-skeleton";
 import { FormsLayout } from "@/components/form-ui/forms-layout";
@@ -23,9 +26,9 @@ const OwnedFormsWrappedComponent: React.FC<OwnedFormsProps> = () => {
   const { address } = useAccount();
 
   const { data, isLoading } = useReadContract({
-    abi: ABI,
-    address: CONTRACT_ADDRESS,
-    functionName: GET_MY_FORMS,
+    abi: CHAINFORM_ABI,
+    address: CHAINFORM_ADDRESS,
+    functionName: "getMyForms",
     account: address,
     args: [],
   });
@@ -43,7 +46,7 @@ const OwnedFormsWrappedComponent: React.FC<OwnedFormsProps> = () => {
       {data &&
         data.map((item, index) => (
           <FormInfoCard key={index} id={item}>
-            <CardFooter className="gap-2">
+            <CardFooter className="gap-8">
               <ShareButton
                 className="flex-1"
                 onClick={() => {

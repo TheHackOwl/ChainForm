@@ -1,35 +1,49 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Tabs, Tab } from "@nextui-org/tabs";
-import { Card, CardBody } from "@nextui-org/card";
 import { useReadContract } from "wagmi";
 
 import { Responses } from "./responses";
 
+import { Settings } from "@/components/settings/settings";
 import { AnswerForm } from "@/components/answer/answer-form";
-import { FormDataType } from "@/types";
-import { ABI, CONTRACT_ADDRESS, GET_FORM } from "@/constants/contract";
+import { FormDataType, RewardRule } from "@/types";
+import {
+  CHAINFORM_ABI,
+  CHAINFORM_ADDRESS,
+} from "@/constants/contract/chainForm";
 import { withWallet } from "@/components/hoc/withWallet";
-
-interface UseReadContractReturnType {
-  readonly data: FormDataType | undefined;
-  // 其他属性
-}
 
 interface ViewTabsProps {
   id: string;
 }
 
 const ViewTabsWappedComponent: React.FC<ViewTabsProps> = ({ id }) => {
-  const { data: formData }: UseReadContractReturnType = useReadContract({
-    abi: ABI,
-    address: CONTRACT_ADDRESS,
-    functionName: GET_FORM,
+  const { data } = useReadContract({
+    abi: CHAINFORM_ABI,
+    address: CHAINFORM_ADDRESS,
+    functionName: "getForm",
     args: [BigInt(id)],
   });
 
+  const [formData, setFromData] = useState<FormDataType | null>(null);
+  const [rewardRule, setRewardRule] = useState<RewardRule | null>(null);
+  const [expireAt, setExpireAt] = useState<number>();
+
+  useEffect(() => {
+    if (data) {
+      const newFormData: FormDataType = {
+        ...data[0],
+        questions: data[0].questions.map((item) => JSON.parse(item)),
+      };
+
+      setFromData(newFormData);
+      setExpireAt(Number(data[1].expireAt));
+      setRewardRule(data[1].rewardRule as RewardRule);
+    }
+  }, [data]);
   // Todo: 加载动画
-  if (!formData) return null;
+  if (!rewardRule || !formData) return null;
 
   return (
     <Tabs aria-label="Options" className="relative" color="primary">
@@ -39,13 +53,14 @@ const ViewTabsWappedComponent: React.FC<ViewTabsProps> = ({ id }) => {
       <Tab key="responses" title="Responses">
         <Responses formId={id} />
       </Tab>
-      <Tab key="setting" title="Setting">
-        <Card>
-          <CardBody>
-            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
-            officia deserunt mollit anim id est laborum.
-          </CardBody>
-        </Card>
+      <Tab key="setting" title="Settings">
+        {expireAt && (
+          <Settings
+            disabled={true}
+            expireAt={expireAt}
+            rewardRule={rewardRule}
+          />
+        )}
       </Tab>
     </Tabs>
   );

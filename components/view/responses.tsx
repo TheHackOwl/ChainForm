@@ -1,9 +1,11 @@
 import { useReadContract } from "wagmi";
-import { useEffect } from "react";
 
 import { Individual } from "./individual";
 
-import { ABI, CONTRACT_ADDRESS, GET_SUBMISSIONS } from "@/constants/contract";
+import {
+  CHAINFORM_ABI,
+  CHAINFORM_ADDRESS,
+} from "@/constants/contract/chainForm";
 import { SubmissionType } from "@/types";
 
 interface UseReadContractReturnType {
@@ -16,22 +18,24 @@ interface ResponsesProps {
 
 export const Responses: React.FC<ResponsesProps> = ({ formId }) => {
   const { data }: UseReadContractReturnType = useReadContract({
-    abi: ABI,
-    address: CONTRACT_ADDRESS,
-    functionName: GET_SUBMISSIONS,
+    abi: CHAINFORM_ABI,
+    address: CHAINFORM_ADDRESS,
+    functionName: "getSubmissions",
     args: [BigInt(formId)],
   });
-
-  useEffect(() => {
-    console.log(data, "data");
-  }, [data]);
 
   // Todo： 加载动画
   if (!data) return null;
 
   return (
     <>
-      <Individual submissions={data} />
+      {data && data.length !== 0 ? (
+        <Individual submissions={data} />
+      ) : (
+        <div className="h-32 flex items-center justify-center">
+          No one has submitted the form yet
+        </div>
+      )}
 
       {/*
       <Tabs

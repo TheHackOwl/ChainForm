@@ -1,36 +1,78 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 
-import { IncentiveSelector, IncentiveType } from "./incentive-selector";
-import { FixedIncentiveInput } from "./fixed-incentive-input";
-import { EthInput } from "./eth-input";
+import { IncentiveSelector } from "./incentive-selector";
+import { PersonNumberInput } from "./person-number-input";
+import { RateInput } from "./rate-input";
+import { useIntSettings } from "./hooks/useIntSettings";
+import { useRewardOptions } from "./hooks/useRewardOptions";
 
+import { CryptoInput } from "@/components/crypto-input";
 import { SettingCard } from "@/components/form-ui/setting-card";
+import { RewardRule, IntSettings, Token } from "@/types";
+interface SetFormIncentiveProps {
+  rewardRule: RewardRule;
+  disabled: boolean;
+  setRewardLogic: (address: `0x${string}`) => void;
+  setInitSettings: (intSettings: IntSettings) => void;
+  setToken: (token: Token) => void;
+}
 
-export const SetFormIncentive: React.FC = () => {
-  const [selectedIncentive, setSelectedIncentive] =
-    useState<IncentiveType>("fixed");
+export const SetFormIncentive: React.FC<SetFormIncentiveProps> = ({
+  rewardRule,
+  disabled,
+  setRewardLogic,
+  setInitSettings,
+}) => {
+  const { token, intSettings } = rewardRule;
+  const { amount, users, setAmount, setUsers } = useIntSettings(
+    intSettings,
+    setInitSettings
+  );
 
-  const handleSelection = (incentive: IncentiveType) => {
-    if (!incentive) return;
-    setSelectedIncentive(incentive);
-  };
+  const {
+    description,
+    selectedRewardType,
+    rewardOptions,
+    setSelectedRewardType,
+  } = useRewardOptions(setRewardLogic);
 
   return (
-    <SettingCard title="Incentive">
+    <SettingCard title="Reward">
       <div className="flex p-4 bg-gray-100 rounded-lg shadow">
         <div className="flex-1">
           <IncentiveSelector
-            value={selectedIncentive}
-            onChange={handleSelection}
+            description={description}
+            isDisabled={disabled}
+            rewardOptions={rewardOptions}
+            value={selectedRewardType}
+            onChange={setSelectedRewardType}
           />
         </div>
         <div className="flex-1">
-          {["fixed", "random"].includes(selectedIncentive) && (
-            <EthInput onChange={() => {}} />
+          {[2, 3].includes(selectedRewardType) && (
+            // <EthInput value={amount} onChange={setAmount} />
+            <>
+              <CryptoInput
+                isRequired
+                color="primary"
+                decimalPlaces={9}
+                isDisabled={disabled}
+                label="Amount by each person"
+                placeholder="Enter amount"
+                value={amount}
+                variant="underlined"
+                onValueChange={setAmount}
+              />
+              <PersonNumberInput
+                isDisabled={disabled}
+                value={users}
+                onChange={setUsers}
+              />
+            </>
           )}
-          {selectedIncentive === "fixed" && (
-            <FixedIncentiveInput onChange={() => {}} />
+          {selectedRewardType === 3 && (
+            <RateInput isDisabled={disabled} value={"0"} onChange={setAmount} />
           )}
         </div>
       </div>
