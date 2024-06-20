@@ -16,7 +16,7 @@ interface SidebarProps {
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const { address } = useAccount();
 
-  if (!address) return;
+  if (!address) return <></>;
 
   return (
     <DynamicSheet isOpen={isOpen} onClose={onClose}>
