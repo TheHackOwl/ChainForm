@@ -6,7 +6,7 @@ import { SidebarHeader } from "./header";
 import { TokenBalance } from "./token-balance";
 import { RewardBalance } from "./reward-balance";
 
-import { DynamicSheet } from "@/components/sheet";
+import { DynamicSheet } from "@/components/sheet/index";
 interface SidebarProps {
   isOpen: boolean;
   className?: string;
