@@ -6,7 +6,7 @@ import { SidebarHeader } from "./header";
 import { TokenBalance } from "./token-balance";
 import { RewardBalance } from "./reward-balance";
 
-import { DynamicSheet } from "@/components/sheet/index";
+import { DynamicDrawer } from "@/components/drawer/index";
 interface SidebarProps {
   isOpen: boolean;
   className?: string;
@@ -19,12 +19,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   if (!address) return <></>;
 
   return (
-    <DynamicSheet isOpen={isOpen} onClose={onClose}>
+    <DynamicDrawer isOpen={isOpen} onClose={onClose}>
       <div className="h-56 bg-indigo-500  p-4 rounded-b-2xl bg-[url('/images/top-bg.png')] bg-cover text-white">
         <SidebarHeader onClose={onClose} />
         <TokenBalance />
         <RewardBalance />
       </div>
-    </DynamicSheet>
+    </DynamicDrawer>
   );
 };

@@ -1,6 +1,6 @@
 import dynamic from "next/dynamic";
 
-export const DynamicSheet = dynamic(() => import("./sheet"), {
+export const DynamicDrawer = dynamic(() => import("./drawer"), {
   loading: () => <></>,
   ssr: false,
 });

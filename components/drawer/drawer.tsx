@@ -6,14 +6,14 @@ import { Card, CardBody } from "@nextui-org/card";
 
 import { DynamicBackdrop } from "@/components/backdrop";
 import { RightArrowIcon } from "@/components/icons";
-interface SheetProps {
+interface DrawerProps {
   className?: string;
   isOpen: boolean;
   children?: React.ReactNode;
   onClose: () => void;
 }
 
-export const Sheet: React.FC<SheetProps> = ({
+export const Drawer: React.FC<DrawerProps> = ({
   isOpen,
   className,
   children,
@@ -54,4 +54,4 @@ export const Sheet: React.FC<SheetProps> = ({
   );
 };
 
-export default Sheet;
+export default Drawer;
