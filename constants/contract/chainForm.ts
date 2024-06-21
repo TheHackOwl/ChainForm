@@ -1,6 +1,17 @@
-export const CHAINFORM_ADDRESS = "0x2c8fC3cC66508417Dc19b6db56bd2E817313cF8A";
+export const CHAINFORM_ADDRESS = "0xfE15a829f8A8f9d42C2Eeddd7Eb4ccd858660eEE";
 
 export const CHAINFORM_ABI = [
+  {
+    type: "constructor",
+    inputs: [
+      {
+        name: "_registry",
+        type: "address",
+        internalType: "contract Registry",
+      },
+    ],
+    stateMutability: "nonpayable",
+  },
   {
     type: "function",
     name: "claim",
@@ -64,6 +75,16 @@ export const CHAINFORM_ABI = [
             name: "expireAt",
             type: "uint256",
             internalType: "uint256",
+          },
+          {
+            name: "isPublic",
+            type: "bool",
+            internalType: "bool",
+          },
+          {
+            name: "rsaPublicKey",
+            type: "string",
+            internalType: "string",
           },
         ],
       },
@@ -151,6 +172,16 @@ export const CHAINFORM_ABI = [
             name: "expireAt",
             type: "uint256",
             internalType: "uint256",
+          },
+          {
+            name: "isPublic",
+            type: "bool",
+            internalType: "bool",
+          },
+          {
+            name: "rsaPublicKey",
+            type: "string",
+            internalType: "string",
           },
         ],
       },
@@ -379,6 +410,37 @@ export const CHAINFORM_ABI = [
       },
     ],
     stateMutability: "nonpayable",
+  },
+  {
+    type: "event",
+    name: "FormCreated",
+    inputs: [
+      {
+        name: "formId",
+        type: "uint256",
+        indexed: true,
+        internalType: "uint256",
+      },
+      {
+        name: "creator",
+        type: "address",
+        indexed: true,
+        internalType: "address",
+      },
+      {
+        name: "isPublic",
+        type: "bool",
+        indexed: true,
+        internalType: "bool",
+      },
+      {
+        name: "timestamp",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256",
+      },
+    ],
+    anonymous: false,
   },
   {
     type: "event",

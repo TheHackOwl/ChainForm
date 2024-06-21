@@ -56,3 +56,10 @@ export function abbreviateAddress(address: string): string {
   // 返回结果
   return `${firstSix}...${lastFour}`;
 }
+
+export function getFormatNumberRegex(decimalPlaces: number) {
+  const regexPattern = `^\\D*(\\d*(?:\\.\\d{0,${decimalPlaces}})?).*?$`;
+  const regex = new RegExp(regexPattern);
+
+  return regex;
+}

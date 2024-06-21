@@ -1,11 +1,14 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 
 import { IncentiveSelector } from "./incentive-selector";
 import { PersonNumberInput } from "./person-number-input";
 import { RateInput } from "./rate-input";
 import { useIntSettings } from "./hooks/useIntSettings";
-import { useRewardOptions } from "./hooks/useRewardOptions";
+import {
+  useRewardOptions,
+  RewardArgsNumberType,
+} from "./hooks/useRewardOptions";
 
 import { CryptoInput } from "@/components/crypto-input";
 import { SettingCard } from "@/components/form-ui/setting-card";
@@ -25,17 +28,23 @@ export const SetFormIncentive: React.FC<SetFormIncentiveProps> = ({
   setInitSettings,
 }) => {
   const { token, intSettings } = rewardRule;
-  const { amount, users, setAmount, setUsers } = useIntSettings(
-    intSettings,
-    setInitSettings
-  );
 
   const {
     description,
     selectedRewardType,
     rewardOptions,
     setSelectedRewardType,
-  } = useRewardOptions(setRewardLogic);
+  } = useRewardOptions(
+    disabled ? (intSettings.length as RewardArgsNumberType) : 2,
+    setRewardLogic
+  );
+
+  const { amount, users, rate, setArgsNumber, setAmount, setUsers, setRate } =
+    useIntSettings(intSettings, setInitSettings);
+
+  useEffect(() => {
+    setArgsNumber(selectedRewardType);
+  }, [selectedRewardType]);
 
   return (
     <SettingCard title="Reward">
@@ -51,10 +60,10 @@ export const SetFormIncentive: React.FC<SetFormIncentiveProps> = ({
         </div>
         <div className="flex-1">
           {[2, 3].includes(selectedRewardType) && (
-            // <EthInput value={amount} onChange={setAmount} />
             <>
               <CryptoInput
                 isRequired
+                allowEmpty={false}
                 color="primary"
                 decimalPlaces={9}
                 isDisabled={disabled}
@@ -72,7 +81,7 @@ export const SetFormIncentive: React.FC<SetFormIncentiveProps> = ({
             </>
           )}
           {selectedRewardType === 3 && (
-            <RateInput isDisabled={disabled} value={"0"} onChange={setAmount} />
+            <RateInput isDisabled={disabled} value={rate} onChange={setRate} />
           )}
         </div>
       </div>

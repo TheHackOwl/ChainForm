@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
 import { formatEther } from "viem";
 import { useReadContract, useAccount } from "wagmi";
 
@@ -17,14 +17,10 @@ export const TokenBalance: React.FC<TokenBalanceProps> = () => {
     args: [address!],
   });
 
-  useEffect(() => {
-    console.log(data, "data");
-  }, [data]);
-
   return (
-    <div className="mt-2">
-      <div>Total my token</div>
-      {!isLoading && <div>{formatEther(data!)}</div>}
+    <div className="mt-4">
+      <div className="text-slate-100">My token</div>
+      {!isLoading && <div className="text-2xl">{formatEther(data!)}</div>}
     </div>
   );
 };

@@ -43,8 +43,10 @@ export const getSettingsTemplate = (): SettingsType => {
     expireAt: BigInt(timestamp),
     rewardLogic: FIXEDREWARD_ADDRESS,
     rewardRule: {
-      intSettings: [BigInt(1000000000), BigInt(10)],
+      intSettings: [BigInt(1000000000), BigInt(10), BigInt(0)],
       token: "0xdd9e5Be4d9c2B921f242AF8a3b095AfC8CcE6475",
     },
+    isPublic: true,
+    rsaPublicKey: "",
   };
 };

@@ -16,6 +16,8 @@ export type SettingsType = {
   rewardRule: RewardRule;
   rewardLogic: `0x${string}`;
   expireAt: bigint;
+  isPublic: boolean;
+  rsaPublicKey: string;
 };
 
 export type RewardRule = {

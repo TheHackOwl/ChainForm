@@ -24,9 +24,8 @@ export const createHeliaSingleton = (() => {
     return instance;
   };
 })();
-
 export const addJson = async <T>(jsonData: T): Promise<string> => {
-  const helia = await createHeliaSingleton();
+  const helia = await createHelia();
 
   const j: HeliaJSON = json(helia);
 
@@ -38,7 +37,7 @@ export const addJson = async <T>(jsonData: T): Promise<string> => {
 export const getJsonByCid = async <T>(cidString: string): Promise<T> => {
   const cid = CID.parse(cidString);
 
-  const helia = await createHeliaSingleton();
+  const helia = await createHelia();
 
   const j = json(helia);
 
@@ -47,7 +46,7 @@ export const getJsonByCid = async <T>(cidString: string): Promise<T> => {
 
 export const pingCid = async (cidString: string) => {
   const cid = CID.parse(cidString);
-  const helia = await createHeliaSingleton();
+  const helia = await createHelia();
 
   // 添加 Pin 并处理 AsyncGenerator 返回值
   for await (const pinnedCid of helia.pins.add(cid)) {

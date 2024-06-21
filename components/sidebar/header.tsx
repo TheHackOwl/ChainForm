@@ -74,8 +74,8 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({ onClose }) => {
         isIconOnly
         className="absolute right-4"
         variant="light"
-        onClick={() => {
-          disconnect();
+        onClick={async () => {
+          await disconnect();
           onClose();
         }}
       >

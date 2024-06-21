@@ -76,8 +76,8 @@ export const useIndividualFormData = (
 
   return {
     currentIndex,
-    setIndividualIndex,
     currentFormData,
     loading,
+    setIndividualIndex,
   };
 };

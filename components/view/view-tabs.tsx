@@ -32,6 +32,8 @@ const ViewTabsWappedComponent: React.FC<ViewTabsProps> = ({ id }) => {
 
   useEffect(() => {
     if (data) {
+      console.log(data, "view-data");
+
       const newFormData: FormDataType = {
         ...data[0],
         questions: data[0].questions.map((item) => JSON.parse(item)),
@@ -42,6 +44,7 @@ const ViewTabsWappedComponent: React.FC<ViewTabsProps> = ({ id }) => {
       setRewardRule(data[1].rewardRule as RewardRule);
     }
   }, [data]);
+
   // Todo: 加载动画
   if (!rewardRule || !formData) return null;
 

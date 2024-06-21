@@ -13,7 +13,17 @@ export const RateInput: React.FC<RateInputProps> = ({
   onChange,
 }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onChange(e.target.value);
+    const strValue = e.target.value;
+
+    if (strValue === "") onChange("0");
+
+    const value = parseInt(strValue);
+
+    if (isNaN(value) || value < 0 || value > 100) {
+      return;
+    }
+
+    onChange(value.toString());
   };
 
   return (
