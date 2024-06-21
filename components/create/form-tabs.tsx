@@ -91,6 +91,8 @@ export function FormTabs({ templateData, settings }: FormTabsProps) {
         expireAt: BigInt(expireAt),
         rewardRule,
         rewardLogic: rewardLogic,
+        isPublic: true,
+        rsaPublicKey: "",
       };
 
       const createFormTxHash = await callCreateForm(
@@ -102,7 +104,6 @@ export function FormTabs({ templateData, settings }: FormTabsProps) {
 
       await waitForTransaction(createFormTxHash);
 
-      // Todo: 回到forms页面
       toast.success("Successfully create!");
       setTimeout(() => {
         router.push("/forms");
@@ -140,7 +141,7 @@ export function FormTabs({ templateData, settings }: FormTabsProps) {
       abi: CHAINFORM_ABI,
       address: CHAINFORM_ADDRESS,
       functionName: "createForm",
-      args: [name, description || " ", questions, settings],
+      args: [name, description || "", questions, settings],
     });
 
     return res;

@@ -1,12 +1,14 @@
 import { Radio, RadioGroup } from "@nextui-org/radio";
 
 interface AnswerMultipleChoiceProps {
+  value: string;
   options: string[];
   isDisable: boolean;
   onValueChange: (val: string) => void;
 }
 
 export const AnswerMultipleChoice: React.FC<AnswerMultipleChoiceProps> = ({
+  value,
   options,
   isDisable,
   onValueChange,
@@ -16,7 +18,7 @@ export const AnswerMultipleChoice: React.FC<AnswerMultipleChoiceProps> = ({
   };
 
   return (
-    <RadioGroup onValueChange={handleChange}>
+    <RadioGroup value={value} onValueChange={handleChange}>
       {options.map((option, index) => {
         return (
           <Radio key={index} isDisabled={isDisable} value={option}>

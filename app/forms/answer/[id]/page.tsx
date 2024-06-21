@@ -9,18 +9,13 @@ import {
 } from "@/constants/contract/chainForm";
 import { FormDataType } from "@/types";
 
-interface UseReadContractReturnType {
-  readonly data: FormDataType | undefined;
-  readonly isLoading: boolean;
-}
-
 export default function AnswerPage({
   params,
 }: Readonly<{
   params: { id: string };
 }>) {
   const [formId, setFormId] = useState<string>(params.id);
-  const { data, isLoading }: UseReadContractReturnType = useReadContract({
+  const { data, isLoading } = useReadContract({
     abi: CHAINFORM_ABI,
     address: CHAINFORM_ADDRESS,
     functionName: "getForm",
@@ -30,9 +25,14 @@ export default function AnswerPage({
   const [formData, setFormData] = useState<FormDataType>();
 
   useEffect(() => {
-    if (!isLoading) {
+    if (!isLoading && data) {
+      const newFormData: FormDataType = {
+        ...data[0],
+        questions: data[0].questions.map((item) => JSON.parse(item)),
+      };
+
       setFormId(params.id);
-      setFormData(data);
+      setFormData(newFormData);
     }
   }, [isLoading]);
 

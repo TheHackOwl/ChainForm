@@ -35,8 +35,6 @@ export const useCardFocus = (): UseCardFocusReturn => {
   }, []);
 
   const registerCard = useCallback((ref: HTMLElement | null, id: Id) => {
-    console.log(id, "id");
-
     cardRefs.current[id] = ref;
   }, []);
 

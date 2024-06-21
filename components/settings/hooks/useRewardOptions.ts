@@ -22,6 +22,7 @@ export interface useRewardOptionsReturn {
   setSelectedRewardType: (type: RewardArgsNumberType) => void;
 }
 export const useRewardOptions = (
+  initType: RewardArgsNumberType,
   setRewardLogic: (address: `0x${string}`) => void,
 ): useRewardOptionsReturn => {
   const config = useConfig();
@@ -31,7 +32,7 @@ export const useRewardOptions = (
     functionName: "getRewardContracts",
   });
   const [selectedRewardType, setSelectedRewardType] =
-    useState<RewardArgsNumberType>(2);
+    useState<RewardArgsNumberType>(initType);
   const [rewardOptions, setRewardOptions] = useState<RewardOption[]>([]);
   const [description, setDescription] = useState<string>("");
 
@@ -68,8 +69,6 @@ export const useRewardOptions = (
       contracts: cintracts,
     });
 
-    console.log(rewardOptions, "rewardOptions");
-
     setRewardOptions(() => {
       return rewardOptions.map((item, index) => {
         const { name, argsDescription, argsNumber, description } = item.result!;
@@ -88,7 +87,7 @@ export const useRewardOptions = (
       const result = rewardOptions[0].result;
 
       setRewardLogic(addressList[0]);
-      setSelectedRewardType(result?.argsNumber as RewardArgsNumberType);
+      // setSelectedRewardType(result?.argsNumber as RewardArgsNumberType);
       setDescription(result?.description || "");
     }
   };

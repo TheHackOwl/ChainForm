@@ -27,6 +27,8 @@ export const SetFormSettings: React.FC<SetFormSettingsProps> = ({
   const validateDeadline = (
     date: ZonedDateTime
   ): true | ValidationError | null | undefined => {
+    if (idDisabled) return true;
+
     const localTimeZone = getLocalTimeZone();
     const currentDateTime = now(localTimeZone);
 
