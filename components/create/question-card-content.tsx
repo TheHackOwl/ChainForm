@@ -1,6 +1,12 @@
 "use client";
 
-import React, { useState, useImperativeHandle, forwardRef } from "react";
+import React, {
+  useState,
+  useImperativeHandle,
+  forwardRef,
+  useEffect,
+  useRef,
+} from "react";
 import { CardHeader, CardFooter } from "@nextui-org/card";
 import { Input } from "@nextui-org/input";
 import { Select, SelectItem } from "@nextui-org/select";
@@ -15,14 +21,15 @@ import { CheckboxesOption } from "@/components/create/checkboxes-option";
 import { FormCard } from "@/components/form-ui/form-card";
 import { FormCardBody } from "@/components/form-ui/form-card-body";
 import { CopyIcon, TrashBinIcon, AddIcon } from "@/components/icons";
-import { FancyMethods } from "@/hooks";
+import { FancyMethods, VerifyMethods } from "@/hooks";
 import {
   answerOptions,
   answerOptionsEnum,
   AnswerType,
 } from "@/constants/index";
 import { Question } from "@/types/index";
-interface QuestionCardContentProps {
+
+interface QuestionCardContentProps extends VerifyMethods {
   question: Question;
   index: number;
   selected?: boolean;
@@ -34,24 +41,59 @@ interface QuestionCardContentProps {
 export const QuestionCardContent = forwardRef<
   FancyMethods<Question>,
   QuestionCardContentProps
->(({ question, index, selected, onCopy, onDelete, onAdd }, ref) => {
+>((props, ref) => {
+  const {
+    question,
+    index,
+    selected,
+    onCopy,
+    onDelete,
+    onAdd,
+    register,
+    unregister,
+  } = props;
+  const cardIdRef = useRef<string>("questionCard-" + Date.now());
   const [questionName, setQuestionName] = useState<string>(question.name);
-
+  const [nameIsInvalid, setNameIsvalid] = useState<boolean>(false);
   const [answerType, setAnswerType] = useState<AnswerType>(
     question.type || answerOptionsEnum.TEXT
   );
 
-  const { options, updateOptions, updateOptionValue, addOption } = useOptions(
-    (question.options as string[]) || []
-  );
+  const {
+    options,
+    isInvalids,
+    updateOptions,
+    updateOptionValue,
+    addOption,
+    verify,
+  } = useOptions((question.options as string[]) || []);
 
   const [required, setRequired] = useState(question.required);
 
   // 定义由父组件调用的函数
   useImperativeHandle(ref, () => ({
     aggregateData,
-    checkStatus: () => true,
+    checkStatus: verifyCardValue,
   }));
+
+  useEffect(() => {
+    register(cardIdRef.current, verifyCardValue);
+
+    return () => {
+      unregister(cardIdRef.current);
+    };
+  }, [questionName, options]);
+
+  const verifyCardValue = () => {
+    let isPass = true;
+
+    if (!questionName.trim()) {
+      isPass = false;
+      setNameIsvalid(true);
+    }
+
+    return verify() && isPass;
+  };
 
   /**
    * type选项的change事件
@@ -71,6 +113,9 @@ export const QuestionCardContent = forwardRef<
    * @param event
    */
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setNameIsvalid(() => {
+      return false;
+    });
     const value = event.target.value;
 
     setQuestionName(value);
@@ -105,6 +150,8 @@ export const QuestionCardContent = forwardRef<
               innerWrapper: "",
             }}
             color="primary"
+            errorMessage="The question title cannot be empty"
+            isInvalid={nameIsInvalid}
             placeholder="Question"
             size="lg"
             value={questionName}
@@ -136,6 +183,7 @@ export const QuestionCardContent = forwardRef<
           {answerType == answerOptionsEnum.MULTIPLECHOICE && (
             <MultipleChoiceOption
               addOption={addOption}
+              isInvalids={isInvalids}
               options={options}
               updateOptionValue={updateOptionValue}
               updateOptions={updateOptions}
@@ -144,6 +192,7 @@ export const QuestionCardContent = forwardRef<
           {answerType == answerOptionsEnum.CHECKBOXES && (
             <CheckboxesOption
               addOption={addOption}
+              isInvalids={isInvalids}
               options={options}
               updateOptionValue={updateOptionValue}
               updateOptions={updateOptions}

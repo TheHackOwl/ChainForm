@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import clsx from "clsx";
 import { DateInput } from "@nextui-org/date-input";
+import { Switch } from "@nextui-org/switch";
 import {
   getLocalTimeZone,
   now,
@@ -15,13 +16,17 @@ export type ValidationError = string | string[];
 interface SetFormSettingsProps {
   expireAt: number;
   idDisabled?: boolean;
+  isPublic: boolean;
   setExpireAt: (expireAt: number) => void;
+  setPublic?: (val: boolean) => void;
 }
 
 export const SetFormSettings: React.FC<SetFormSettingsProps> = ({
   expireAt,
   idDisabled,
+  isPublic,
   setExpireAt,
+  setPublic,
 }) => {
   const [validated, setValidated] = useState<boolean>(true);
   const validateDeadline = (
@@ -50,6 +55,26 @@ export const SetFormSettings: React.FC<SetFormSettingsProps> = ({
   return (
     <SettingCard title="Settings">
       <div className="flex items-center justify-between p-4 bg-gray-100 rounded-lg shadow">
+        <div className="flex-1">
+          <div
+            className={clsx("text-lg font-semibold", {
+              "text-gray-800": !idDisabled,
+              "text-gray-800/50": idDisabled,
+            })}
+          >
+            Public
+          </div>
+        </div>
+        <div className="flex-1">
+          <Switch
+            isDisabled={idDisabled}
+            isSelected={isPublic}
+            onValueChange={setPublic}
+          />
+        </div>
+      </div>
+
+      <div className="flex items-center justify-between mt-4 p-4 bg-gray-100 rounded-lg shadow">
         <div className="flex-1">
           <div
             className={clsx("text-lg font-semibold", {

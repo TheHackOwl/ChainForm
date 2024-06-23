@@ -6,10 +6,12 @@ import { optionsProps } from "./hooks/useOptions";
 
 import { DeleteIcon } from "@/components/icons";
 
+export type ValidationError = string | string[];
 interface CheckboxesOptionProps extends optionsProps {}
 
 export const CheckboxesOption: React.FC<CheckboxesOptionProps> = ({
   options = [],
+  isInvalids,
   updateOptions,
   updateOptionValue,
   addOption,
@@ -22,6 +24,8 @@ export const CheckboxesOption: React.FC<CheckboxesOptionProps> = ({
             <Checkbox isDisabled radius="none" />
             <Input
               color="primary"
+              errorMessage={"The option value cannot be empty"}
+              isInvalid={isInvalids[index] || false}
               value={item}
               variant="underlined"
               onChange={(e) => {

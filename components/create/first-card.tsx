@@ -1,12 +1,13 @@
 "use client";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Input } from "@nextui-org/input";
 
 import { FormBaseInfo } from "@/types/index";
 import { useThrottle } from "@/hooks";
 import { FormFirstCard } from "@/components/form-ui/form-first-card";
 import { FormCardBody } from "@/components/form-ui/form-card-body";
-interface FirstCardProps {
+import { VerifyMethods } from "@/hooks";
+interface FirstCardProps extends VerifyMethods {
   name: string;
   description: string;
   change: (data: FormBaseInfo) => void;
@@ -16,9 +17,21 @@ export const FirstCard: React.FC<FirstCardProps> = ({
   name,
   description,
   change,
+  register,
+  unregister,
 }) => {
-  const [titleValue, setTitleValue] = React.useState(name);
-  const [descriptionValue, setDescriptionValue] = React.useState(description);
+  const cardIdRef = useRef<string>("firstCard-" + Date.now());
+  const [titleValue, setTitleValue] = useState(name);
+  const [isInvalid, setIsInvalid] = useState(false);
+  const [descriptionValue, setDescriptionValue] = useState(description);
+
+  useEffect(() => {
+    register(cardIdRef.current, verifyCardValue);
+
+    return () => {
+      unregister(cardIdRef.current);
+    };
+  }, [titleValue]);
 
   // 使用自定义的useThrottle Hook Using the custom useThrottle Hook
   const throttledChangeHandler = useThrottle((info: FormBaseInfo) => {
@@ -29,6 +42,7 @@ export const FirstCard: React.FC<FirstCardProps> = ({
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
 
+    setIsInvalid(false);
     setTitleValue(() => {
       throttledChangeHandler({
         name: newValue,
@@ -52,6 +66,16 @@ export const FirstCard: React.FC<FirstCardProps> = ({
     });
   };
 
+  const verifyCardValue = () => {
+    if (!titleValue.trim()) {
+      setIsInvalid(true);
+
+      return false;
+    }
+
+    return true;
+  };
+
   return (
     <FormFirstCard>
       <FormCardBody>
@@ -63,6 +87,8 @@ export const FirstCard: React.FC<FirstCardProps> = ({
               innerWrapper: "",
             }}
             color="primary"
+            errorMessage="The form title cannot be empty"
+            isInvalid={isInvalid}
             placeholder="Question"
             size="lg"
             value={titleValue}

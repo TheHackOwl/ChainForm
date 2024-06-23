@@ -6,3 +6,4 @@ export {
 } from "./useAggregateRefsData";
 export { useCardFocus, type UseCardFocusReturn } from "./useCardFocus";
 export { useRequireConnect } from "./useRequireConnect";
+export * from "./useVerify";
