@@ -5,9 +5,5 @@ export default function ViewPage({
 }: Readonly<{
   params: { id: string };
 }>) {
-  return (
-    <div className="max-w-screen-md m-auto">
-      <ViewTabs id={params.id} />
-    </div>
-  );
+  return <ViewTabs id={params.id} />;
 }

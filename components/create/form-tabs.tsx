@@ -19,7 +19,12 @@ import { QuestionCardContent } from "@/components/create/question-card-content";
 import { CardSelector } from "@/components/form-ui/card-selector";
 import { FirstCard } from "@/components/create/first-card";
 import { FormDataType, Question, SettingsType } from "@/types/index";
-import { useAggregateRefsData, useCardFocus, useRequireConnect } from "@/hooks";
+import {
+  useAggregateRefsData,
+  useCardFocus,
+  useRequireConnect,
+  useVerify,
+} from "@/hooks";
 import {
   CHAINFORM_ABI,
   CHAINFORM_ADDRESS,
@@ -42,8 +47,11 @@ export function FormTabs({ templateData, settings }: FormTabsProps) {
   const { requireConnect } = useRequireConnect();
   const { writeContractAsync } = useWriteContract();
   const [sending, setSending] = useState(false);
-  const { refs: questionRefs, aggregateData } =
-    useAggregateRefsData<Question>();
+  const {
+    refs: questionRefs,
+    aggregateData,
+    checkAllComponentsStatus,
+  } = useAggregateRefsData<Question>();
   const { baseInfo, updateBaseInfo } = useFormInfo({
     name: templateData.name,
     description: templateData.description,
@@ -55,22 +63,21 @@ export function FormTabs({ templateData, settings }: FormTabsProps) {
     addQuestion,
     setQuestionList,
   } = useQuestions(templateData.questions);
-
+  const [isPublic, setIsPublic] = useState<boolean>(
+    () => settings.isPublic ?? true
+  );
   const { rewardRule, intSettings, setInitSettings, setToken } = useRewardRule(
     settings.rewardRule
   );
-
   const [expireAt, setExpireAt] = useState<number>(() =>
     Number(settings.expireAt)
   );
-
   const { selectedCard, setSelectedCard, registerCard, removeCard } =
     useCardFocus();
-
   const [rewardLogic, setRewardLogic] = useState<`0x${string}`>(
     settings.rewardLogic
   );
-
+  const { register, unregister, verify } = useVerify();
   /**
    * 发布函数
    */
@@ -91,7 +98,7 @@ export function FormTabs({ templateData, settings }: FormTabsProps) {
         expireAt: BigInt(expireAt),
         rewardRule,
         rewardLogic: rewardLogic,
-        isPublic: true,
+        isPublic: isPublic,
         rsaPublicKey: "",
       };
 
@@ -164,6 +171,15 @@ export function FormTabs({ templateData, settings }: FormTabsProps) {
    * 问卷页面点击下一步需要保存数据
    */
   const handleQuestionsNextStep = () => {
+    const result = verify();
+
+    console.log(result, "result");
+
+    if (!result) {
+      toast.error("Please fill in all the required fields.");
+
+      return;
+    }
     setQuestionList(aggregateData());
     toNextStep();
   };
@@ -190,6 +206,8 @@ export function FormTabs({ templateData, settings }: FormTabsProps) {
             change={updateBaseInfo}
             description={baseInfo.description}
             name={baseInfo.name}
+            register={register}
+            unregister={unregister}
           />
           {questionList.map((question, index) => {
             return (
@@ -210,6 +228,8 @@ export function FormTabs({ templateData, settings }: FormTabsProps) {
                   }}
                   index={index}
                   question={question}
+                  register={register}
+                  unregister={unregister}
                   onAdd={addQuestion}
                   onCopy={copyQuestion}
                   onDelete={deleteQuestion}
@@ -245,9 +265,11 @@ export function FormTabs({ templateData, settings }: FormTabsProps) {
         <Settings
           disabled={false}
           expireAt={expireAt}
+          isPublic={isPublic}
           rewardRule={rewardRule}
           setExpireAt={setExpireAt}
           setInitSettings={setInitSettings}
+          setPublic={setIsPublic}
           setRewardLogic={setRewardLogic}
           setToken={setToken}
         />

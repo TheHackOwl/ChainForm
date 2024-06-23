@@ -35,13 +35,9 @@ export const AnswerForm: React.FC<AnswerFormProps> = ({
   formId,
 }) => {
   const router = useRouter();
-
   const [Sending, setSending] = useState(false);
-
   const { requireConnect } = useRequireConnect();
-
   const { writeContractAsync } = useWriteContract();
-
   const { address } = useAccount();
 
   const {

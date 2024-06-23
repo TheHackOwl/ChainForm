@@ -10,6 +10,7 @@ interface MultipleChoiceOptionProps extends optionsProps {}
 
 export const MultipleChoiceOption: React.FC<MultipleChoiceOptionProps> = ({
   options = [],
+  isInvalids,
   updateOptions,
   updateOptionValue,
   addOption,
@@ -23,6 +24,8 @@ export const MultipleChoiceOption: React.FC<MultipleChoiceOptionProps> = ({
               <Radio value="buenos-aires" />
               <Input
                 color="primary"
+                errorMessage={"The option value cannot be empty"}
+                isInvalid={isInvalids[index] || false}
                 value={item}
                 variant="underlined"
                 onChange={(e) => {

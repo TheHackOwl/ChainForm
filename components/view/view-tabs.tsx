@@ -29,6 +29,7 @@ const ViewTabsWappedComponent: React.FC<ViewTabsProps> = ({ id }) => {
   const [formData, setFromData] = useState<FormDataType | null>(null);
   const [rewardRule, setRewardRule] = useState<RewardRule | null>(null);
   const [expireAt, setExpireAt] = useState<number>();
+  const [isPublic, setIsPublic] = useState<boolean>(true);
 
   useEffect(() => {
     if (data) {
@@ -42,30 +43,34 @@ const ViewTabsWappedComponent: React.FC<ViewTabsProps> = ({ id }) => {
       setFromData(newFormData);
       setExpireAt(Number(data[1].expireAt));
       setRewardRule(data[1].rewardRule as RewardRule);
+      setIsPublic(data[1].isPublic);
     }
   }, [data]);
 
   // Todo: 加载动画
-  if (!rewardRule || !formData) return null;
+  if (!rewardRule || !formData) return <></>;
 
   return (
-    <Tabs aria-label="Options" className="relative" color="primary">
-      <Tab key="questions" title="Questions">
-        <AnswerForm formData={formData} formId={id} isDisable={true} />
-      </Tab>
-      <Tab key="responses" title="Responses">
-        <Responses formId={id} />
-      </Tab>
-      <Tab key="setting" title="Settings">
-        {expireAt && (
-          <Settings
-            disabled={true}
-            expireAt={expireAt}
-            rewardRule={rewardRule}
-          />
-        )}
-      </Tab>
-    </Tabs>
+    <div className="max-w-screen-md m-auto">
+      <Tabs aria-label="Options" className="relative" color="primary">
+        <Tab key="questions" title="Questions">
+          <AnswerForm formData={formData} formId={id} isDisable={true} />
+        </Tab>
+        <Tab key="responses" title="Responses">
+          <Responses formId={id} />
+        </Tab>
+        <Tab key="setting" title="Settings">
+          {expireAt && (
+            <Settings
+              disabled={true}
+              expireAt={expireAt}
+              isPublic={isPublic}
+              rewardRule={rewardRule}
+            />
+          )}
+        </Tab>
+      </Tabs>
+    </div>
   );
 };
 

@@ -61,7 +61,15 @@ export const useAggregateRefsData = <T>() => {
    * @returns {boolean} 如果所有组件的状态都正确，则返回 true，否则返回 false。
    */
   const checkAllComponentsStatus = () => {
-    return refs.current.every((ref) => ref.checkStatus());
+    let isPass = true;
+
+    refs.current.forEach((ref) => {
+      if (!ref.checkStatus()) {
+        isPass = false;
+      }
+    });
+
+    return isPass;
   };
 
   return {

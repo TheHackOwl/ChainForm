@@ -3,35 +3,68 @@
 import { useEffect, useState } from "react";
 import { Card, CardBody, CardHeader } from "@nextui-org/card";
 import { Chip } from "@nextui-org/chip";
-import { useReadContract } from "wagmi";
+import { useReadContracts } from "wagmi";
 
-import { FormBaseInfo } from "@/types";
+import { FormBaseInfo, SettingsType } from "@/types";
 import { formatTimestampToDate } from "@/lib/utils";
 import {
   CHAINFORM_ABI,
   CHAINFORM_ADDRESS,
 } from "@/constants/contract/chainForm";
 import { FormItemSkeleton } from "@/components/form-ui/form-item-skeleton";
-import { PublicIcon, PersonsIcon, CreateIcon } from "@/components/icons";
+import { PublicIcon, PersonsIcon, DeallineIcon } from "@/components/icons";
 
 interface FormInfoCardProps {
   id: bigint;
   children?: React.ReactNode;
+  changeDisable?: (val: boolean) => void;
 }
 
-export const FormInfoCard: React.FC<FormInfoCardProps> = ({ id, children }) => {
-  const { data, isLoading } = useReadContract({
-    abi: CHAINFORM_ABI,
-    address: CHAINFORM_ADDRESS,
-    functionName: "getForm",
-    args: [id],
+export const FormInfoCard: React.FC<FormInfoCardProps> = ({
+  id,
+  children,
+  changeDisable,
+}) => {
+  const { data, isLoading } = useReadContracts({
+    contracts: [
+      {
+        abi: CHAINFORM_ABI,
+        address: CHAINFORM_ADDRESS,
+        functionName: "getForm",
+        args: [id],
+      },
+      {
+        abi: CHAINFORM_ABI,
+        address: CHAINFORM_ADDRESS,
+        functionName: "getSubmissions",
+        args: [id],
+      },
+    ],
   });
 
   const [fromBaseInfo, setFromBaseInfo] = useState<FormBaseInfo | null>(null);
+  const [settings, setSettings] = useState<SettingsType | null>(null);
+  const [personCount, setPersonCount] = useState<number | 0>(0);
 
   useEffect(() => {
     if (data) {
-      setFromBaseInfo(data[0] as FormBaseInfo);
+      const formInfo = data[0].result;
+      const submissions = data[1].result;
+
+      setPersonCount(submissions?.length || 0);
+
+      if (formInfo) {
+        setFromBaseInfo(formInfo[0] as FormBaseInfo);
+        setSettings(formInfo[1] as SettingsType);
+
+        const expireAt = Number(formInfo[1].expireAt);
+
+        const curTime = Date.now();
+
+        if (expireAt <= curTime) {
+          changeDisable && changeDisable(true);
+        }
+      }
     }
   }, [data]);
 
@@ -46,13 +79,12 @@ export const FormInfoCard: React.FC<FormInfoCardProps> = ({ id, children }) => {
           <h2 className="text-2xl font-bold text-gray-900">
             {fromBaseInfo.name}
           </h2>
-          <div className="min-h-8	 mt-2 text-xs text-gray-400 break-all	line-clamp-2">
+          <div className="min-h-8	 mt-2 text-sm text-gray-400 break-all	line-clamp-2">
             {fromBaseInfo.description}
           </div>
         </div>
       </CardHeader>
       <CardBody className="overflow-visible">
-        {/* <div className="h-28">1</div> */}
         <div className="flex justify-between gap-2">
           <Chip
             className="text-xs"
@@ -60,7 +92,7 @@ export const FormInfoCard: React.FC<FormInfoCardProps> = ({ id, children }) => {
             startContent={<PublicIcon />}
             variant="bordered"
           >
-            Public
+            {settings?.isPublic ? "Public" : "Private"}
           </Chip>
 
           <Chip
@@ -69,15 +101,15 @@ export const FormInfoCard: React.FC<FormInfoCardProps> = ({ id, children }) => {
             startContent={<PersonsIcon />}
             variant="bordered"
           >
-            392
+            {personCount}
           </Chip>
           <Chip
             className="text-xs"
             color="primary"
-            startContent={<CreateIcon />}
+            startContent={<DeallineIcon />}
             variant="bordered"
           >
-            {formatTimestampToDate(Number(fromBaseInfo.createdAt) * 1000)}
+            {formatTimestampToDate(Number(settings?.expireAt))}
           </Chip>
         </div>
       </CardBody>

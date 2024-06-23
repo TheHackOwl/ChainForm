@@ -1,5 +1,5 @@
 "use client";
-// import { FormsLayout } from "@/components/form-ui/forms-layout";
+
 import { usePublicClient } from "wagmi";
 import { useEffect, useState } from "react";
 import { CardFooter } from "@nextui-org/card";
@@ -26,6 +26,7 @@ export const HomeForms: React.FC<HomeFormsProps> = () => {
   const publicClient = usePublicClient();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [formIds, setFormIds] = useState<bigint[]>([]);
+  const [idDisable, setIsDisable] = useState<boolean>(false);
 
   useEffect(() => {
     getFormsId();
@@ -37,6 +38,9 @@ export const HomeForms: React.FC<HomeFormsProps> = () => {
       abi: CHAINFORM_ABI,
       eventName: "FormCreated",
       fromBlock: BigInt(0),
+      args: {
+        isPublic: true,
+      },
     });
 
     if (!logs) return;
@@ -49,6 +53,10 @@ export const HomeForms: React.FC<HomeFormsProps> = () => {
     setIsLoading(false);
   };
 
+  const changeDisable = (val: boolean) => {
+    setIsDisable(val);
+  };
+
   const toAnswer = (id: string): void => {
     router.push("/forms/answer/" + id);
   };
@@ -58,10 +66,11 @@ export const HomeForms: React.FC<HomeFormsProps> = () => {
   return (
     <FormsLayout>
       {formIds.map((item, index) => (
-        <FormInfoCard key={index} id={item}>
+        <FormInfoCard key={index} changeDisable={changeDisable} id={item}>
           <CardFooter className="gap-8">
             <ShareButton
               className="flex-1"
+              isDisabled={idDisable}
               onClick={() => {
                 shareFn(item.toString());
               }}
@@ -69,6 +78,7 @@ export const HomeForms: React.FC<HomeFormsProps> = () => {
             <Button
               className="flex-1"
               color="primary"
+              isDisabled={idDisable}
               startContent={<FillOutIcon />}
               onClick={() => {
                 toAnswer(item.toString());

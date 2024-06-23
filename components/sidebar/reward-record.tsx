@@ -10,6 +10,7 @@ import {
   TableRow,
   TableCell,
 } from "@nextui-org/table";
+import clsx from "clsx";
 
 import {
   CHAINFORM_ABI,
@@ -29,6 +30,7 @@ export const RewardRecord: React.FC<RwardRecordProps> = () => {
   const { address } = useAccount();
   const publicCient = usePublicClient();
   const [records, setRecords] = useState<RecordType[]>();
+  const cellStyle = clsx("text-center");
 
   useEffect(() => {
     getEventLog();
@@ -70,20 +72,20 @@ export const RewardRecord: React.FC<RwardRecordProps> = () => {
         isHeaderSticky={true}
       >
         <TableHeader>
-          <TableColumn className="text-center">DATE</TableColumn>
-          <TableColumn className="text-center">TYPE</TableColumn>
-          <TableColumn className="text-center">AMOUNT</TableColumn>
+          <TableColumn className={cellStyle}>DATE</TableColumn>
+          <TableColumn className={cellStyle}>TYPE</TableColumn>
+          <TableColumn className={cellStyle}>AMOUNT</TableColumn>
         </TableHeader>
         <TableBody emptyContent={"No record"}>
           {records
             ? records.map((item, index) => {
                 return (
                   <TableRow key={index}>
-                    <TableCell>{item.date}</TableCell>
-                    <TableCell>
+                    <TableCell className={cellStyle}>{item.date}</TableCell>
+                    <TableCell className={cellStyle}>
                       {item.changeType == 1 ? "Reward" : "Claim"}
                     </TableCell>
-                    <TableCell>
+                    <TableCell className={cellStyle}>
                       {item.changeType == 1 ? (
                         <span className="text-lime-600">{`+${item.amount}`}</span>
                       ) : (
