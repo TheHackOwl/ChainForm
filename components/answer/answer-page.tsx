@@ -67,7 +67,7 @@ const AnswerPageWappedComponent: React.FC<AnswerPageProps> = ({ id }) => {
   }, [isLoading]);
 
   // Todo: 添加加载动画
-  if (formData == null) return;
+  if (formData == null) return <></>;
 
   // 表单是否超出填写日期
   if (isExpired)
