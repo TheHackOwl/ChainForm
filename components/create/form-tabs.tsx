@@ -78,10 +78,20 @@ export function FormTabs({ templateData, settings }: FormTabsProps) {
     settings.rewardLogic
   );
   const { register, unregister, verify } = useVerify();
+
   /**
    * 发布函数
    */
   const handlePublish = async () => {
+    const result = verify();
+
+    console.log(result, "result");
+
+    if (!result) {
+      toast.error("Please check the information you have filled in");
+
+      return;
+    }
     setSending(true);
     try {
       await requireConnect();
@@ -115,7 +125,8 @@ export function FormTabs({ templateData, settings }: FormTabsProps) {
       setTimeout(() => {
         router.push("/forms");
       }, 1000);
-    } catch (error) {
+    } catch (error: any) {
+      toast.error(error.shortMessage);
     } finally {
       setSending(false);
     }
@@ -266,12 +277,14 @@ export function FormTabs({ templateData, settings }: FormTabsProps) {
           disabled={false}
           expireAt={expireAt}
           isPublic={isPublic}
+          register={register}
           rewardRule={rewardRule}
           setExpireAt={setExpireAt}
           setInitSettings={setInitSettings}
           setPublic={setIsPublic}
           setRewardLogic={setRewardLogic}
           setToken={setToken}
+          unregister={unregister}
         />
         <Card className="mt-4">
           <CardBody className="flex gap-4 flex-row">

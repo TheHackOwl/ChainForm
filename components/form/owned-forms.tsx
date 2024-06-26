@@ -17,6 +17,7 @@ import { FormsSkeleton } from "@/components/form-ui/forms-skeleton";
 import { FormsLayout } from "@/components/form-ui/forms-layout";
 import { withWallet } from "@/components/hoc/withWallet";
 import { ViewIcon } from "@/components/icons";
+import { EmptyPage } from "@/components/empty-page";
 
 interface OwnedFormsProps {}
 
@@ -40,6 +41,8 @@ const OwnedFormsWrappedComponent: React.FC<OwnedFormsProps> = () => {
   const toView = (id: string): void => {
     router.push("/forms/view/" + id);
   };
+
+  if (!data || data?.length == 0) return <EmptyPage />;
 
   return (
     <FormsLayout>
