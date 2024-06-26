@@ -19,6 +19,7 @@ export interface useRewardOptionsReturn {
   rewardOptions: RewardOption[];
   description: string;
   selectedRewardType: RewardArgsNumberType;
+  contractAddress: string;
   setSelectedRewardType: (type: RewardArgsNumberType) => void;
 }
 export const useRewardOptions = (
@@ -26,15 +27,18 @@ export const useRewardOptions = (
   setRewardLogic: (address: `0x${string}`) => void,
 ): useRewardOptionsReturn => {
   const config = useConfig();
+  // 获取奖励合约地址
   const { data, isLoading } = useReadContract({
     abi: REGISTRY_ABI,
     address: REGISTRY_ADDRESS,
     functionName: "getRewardContracts",
   });
+
   const [selectedRewardType, setSelectedRewardType] =
     useState<RewardArgsNumberType>(initType);
   const [rewardOptions, setRewardOptions] = useState<RewardOption[]>([]);
   const [description, setDescription] = useState<string>("");
+  const [contractAddress, setContractAddress] = useState<string>("");
 
   useEffect(() => {
     if (!isLoading && data) {
@@ -50,6 +54,7 @@ export const useRewardOptions = (
     setDescription(option?.description || "");
     if (option) {
       setRewardLogic(option.address);
+      setContractAddress(option.address);
     }
   }, [selectedRewardType]);
 
@@ -60,6 +65,8 @@ export const useRewardOptions = (
 
   const initializeOptions = async (addressList: `0x${string}`[]) => {
     if (addressList.length === 0) return;
+
+    // 根据奖励合约地址，获取奖励合约的meta
     const cintracts = addressList.map((item) => ({
       address: item,
       abi: REWARD_ABI,
@@ -86,6 +93,7 @@ export const useRewardOptions = (
     if (rewardOptions.length > 0) {
       const result = rewardOptions[0].result;
 
+      setContractAddress(addressList[0]);
       setRewardLogic(addressList[0]);
       // setSelectedRewardType(result?.argsNumber as RewardArgsNumberType);
       setDescription(result?.description || "");
@@ -97,5 +105,6 @@ export const useRewardOptions = (
     description,
     selectedRewardType,
     setSelectedRewardType: setSelectedRewardTypeProxy,
+    contractAddress,
   };
 };

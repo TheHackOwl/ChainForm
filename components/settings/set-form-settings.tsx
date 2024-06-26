@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 import { DateInput } from "@nextui-org/date-input";
 import { Switch } from "@nextui-org/switch";
@@ -10,10 +10,11 @@ import {
 } from "@internationalized/date";
 
 import { SettingCard } from "@/components/form-ui/setting-card";
+import { VerifyMethods } from "@/hooks/index";
 
 export type ValidationError = string | string[];
 
-interface SetFormSettingsProps {
+interface SetFormSettingsProps extends Partial<VerifyMethods> {
   expireAt: number;
   idDisabled?: boolean;
   isPublic: boolean;
@@ -27,8 +28,31 @@ export const SetFormSettings: React.FC<SetFormSettingsProps> = ({
   isPublic,
   setExpireAt,
   setPublic,
+  register,
+  unregister,
 }) => {
-  const [validated, setValidated] = useState<boolean>(true);
+  const idRef = useRef("dealline-" + Date.now());
+
+  const validatedRef = useRef<boolean>(true);
+
+  const [deadlineValue, setDeadline] = useState<ZonedDateTime>(
+    fromAbsolute(expireAt, getLocalTimeZone())
+  );
+
+  useEffect(() => {
+    if (register) {
+      register(idRef.current, () => {
+        return validatedRef.current;
+      });
+    }
+
+    return () => {
+      if (unregister) {
+        unregister(idRef.current);
+      }
+    };
+  }, [deadlineValue]);
+
   const validateDeadline = (
     date: ZonedDateTime
   ): true | ValidationError | null | undefined => {
@@ -38,17 +62,18 @@ export const SetFormSettings: React.FC<SetFormSettingsProps> = ({
     const currentDateTime = now(localTimeZone);
 
     if (date.compare(currentDateTime) > 0) {
-      setValidated(true);
+      validatedRef.current = true;
 
       return true;
     } else {
-      setValidated(false);
+      validatedRef.current = false;
 
       return ["The deadline must be in the future."];
     }
   };
 
   const handleChange = (zonedDateTime: ZonedDateTime) => {
+    setDeadline(zonedDateTime);
     setExpireAt(zonedDateTime.toDate().getTime());
   };
 
@@ -95,7 +120,7 @@ export const SetFormSettings: React.FC<SetFormSettingsProps> = ({
             isDisabled={idDisabled}
             label="Input Deadline"
             validate={validateDeadline}
-            value={fromAbsolute(expireAt, getLocalTimeZone())}
+            value={deadlineValue}
             onChange={handleChange}
           />
         </div>

@@ -17,7 +17,7 @@ import { ShareButton } from "@/components/form/share-button";
 import { FormsSkeleton } from "@/components/form-ui/forms-skeleton";
 import { FormsLayout } from "@/components/form-ui/forms-layout";
 import { FillOutIcon } from "@/components/icons";
-
+import { EmptyPage } from "@/components/empty-page";
 interface HomeFormsProps {}
 
 export const HomeForms: React.FC<HomeFormsProps> = () => {
@@ -62,6 +62,8 @@ export const HomeForms: React.FC<HomeFormsProps> = () => {
   };
 
   if (isLoading) return <FormsSkeleton />;
+
+  if (formIds.length === 0) return <EmptyPage />;
 
   return (
     <FormsLayout>

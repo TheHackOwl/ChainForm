@@ -78,10 +78,20 @@ export function FormTabs({ templateData, settings }: FormTabsProps) {
     settings.rewardLogic
   );
   const { register, unregister, verify } = useVerify();
+
   /**
    * 发布函数
    */
   const handlePublish = async () => {
+    const result = verify();
+
+    console.log(result, "result");
+
+    if (!result) {
+      toast.error("Please check the information you have filled in");
+
+      return;
+    }
     setSending(true);
     try {
       await requireConnect();
@@ -116,6 +126,7 @@ export function FormTabs({ templateData, settings }: FormTabsProps) {
         router.push("/forms");
       }, 1000);
     } catch (error) {
+      console.error("Publish fail", error);
     } finally {
       setSending(false);
     }
@@ -130,7 +141,7 @@ export function FormTabs({ templateData, settings }: FormTabsProps) {
       abi: MY_TOKNE_ABI,
       address: MY_TOKNE_ADDRESS,
       functionName: APPROVE,
-      gasPrice: parseGwei("10"),
+      gasPrice: parseGwei("0.06"),
       args: [CHAINFORM_ADDRESS, amount],
     });
 
@@ -266,12 +277,14 @@ export function FormTabs({ templateData, settings }: FormTabsProps) {
           disabled={false}
           expireAt={expireAt}
           isPublic={isPublic}
+          register={register}
           rewardRule={rewardRule}
           setExpireAt={setExpireAt}
           setInitSettings={setInitSettings}
           setPublic={setIsPublic}
           setRewardLogic={setRewardLogic}
           setToken={setToken}
+          unregister={unregister}
         />
         <Card className="mt-4">
           <CardBody className="flex gap-4 flex-row">

@@ -13,7 +13,6 @@ import clsx from "clsx";
 import { ConnectButton } from "@/components/connect-button";
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
-import { Logo } from "@/components/icons";
 
 export const Navbar = () => {
   return (
@@ -21,8 +20,11 @@ export const Navbar = () => {
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
           <NextLink className="flex justify-start items-center gap-1" href="/">
-            <Logo />
-            <p className="font-bold text-inherit">ChainFrom</p>
+            {/* <Logo /> */}
+            <img alt="" className="w-10 h-10" src="/logo.svg" />
+            <p className="underline decoration-solid font-extrabold text-inherit  text-xl font-serif">
+              ChainFrom
+            </p>
           </NextLink>
         </NavbarBrand>
         <ul className="hidden lg:flex gap-4 justify-start ml-2">

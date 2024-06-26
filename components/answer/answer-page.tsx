@@ -1,16 +1,18 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useReadContracts } from "wagmi";
+import { Tabs, Tab } from "@nextui-org/tabs";
 
 import { RemindModal } from "./remind-modal";
 
 import { AnswerForm } from "@/components/answer/answer-form";
 import { withWallet } from "@/components/hoc/withWallet";
+import { Settings } from "@/components/settings/settings";
 import {
   CHAINFORM_ABI,
   CHAINFORM_ADDRESS,
 } from "@/constants/contract/chainForm";
-import { FormDataType } from "@/types";
+import { FormDataType, RewardRule } from "@/types";
 
 interface AnswerPageProps {
   id: string;
@@ -37,10 +39,11 @@ const AnswerPageWappedComponent: React.FC<AnswerPageProps> = ({ id }) => {
   });
 
   const [formData, setFormData] = useState<FormDataType>();
-
   const [isExpired, setIsExpired] = useState<boolean>(false);
-
   const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
+  const [rewardRule, setRewardRule] = useState<RewardRule | null>(null);
+  const [expireAt, setExpireAt] = useState<number>();
+  const [isPublic, setIsPublic] = useState<boolean>(true);
 
   useEffect(() => {
     if (!isLoading && data) {
@@ -59,6 +62,10 @@ const AnswerPageWappedComponent: React.FC<AnswerPageProps> = ({ id }) => {
         if (Number(form[1].expireAt) <= curTime) {
           setIsExpired(true);
         }
+
+        setExpireAt(Number(form[1].expireAt));
+        setRewardRule(form[1].rewardRule as RewardRule);
+        setIsPublic(form[1].isPublic);
       }
       setFormId(id);
 
@@ -84,7 +91,21 @@ const AnswerPageWappedComponent: React.FC<AnswerPageProps> = ({ id }) => {
 
   return (
     <div className="max-w-screen-md m-auto">
-      <AnswerForm formData={formData} formId={formId} isDisable={false} />
+      <Tabs aria-label="Options" className="relative" color="primary">
+        <Tab key="answer" title="Answer">
+          <AnswerForm formData={formData} formId={formId} isDisable={false} />
+        </Tab>
+        <Tab key="formInfo" title="Form Information">
+          {expireAt && rewardRule && (
+            <Settings
+              disabled={true}
+              expireAt={expireAt}
+              isPublic={isPublic}
+              rewardRule={rewardRule}
+            />
+          )}
+        </Tab>
+      </Tabs>
     </div>
   );
 };
