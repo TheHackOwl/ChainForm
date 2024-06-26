@@ -52,7 +52,13 @@ const AnswerPageWappedComponent: React.FC<AnswerPageProps> = ({ id }) => {
       if (form) {
         const newFormData: FormDataType = {
           ...form[0],
-          questions: form[0].questions.map((item: string) => JSON.parse(item)),
+          questions: form[0].questions.map((item: string) => {
+            try {
+              return JSON.parse(item);
+            } catch (error) {
+              return item;
+            }
+          }),
         };
 
         setFormData(newFormData);

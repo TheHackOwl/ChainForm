@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { AnswerFirstCard } from "@/components/answer/answer-first-card";
 import { AnserCard } from "@/components/answer/answer-card";
 import { FormDataType, Question, AnswerFormType } from "@/types";
-import { saveAnswerForm, generateHash } from "@/app/actions";
+import { generateHash } from "@/lib/utils";
 import {
   CHAINFORM_ABI,
   CHAINFORM_ADDRESS,
@@ -64,8 +64,10 @@ export const AnswerForm: React.FC<AnswerFormProps> = ({
       // 获取提交数据
       const submitData = getSubmitData();
 
-      // 保存表单数据并获取cid
-      const cid = await saveAnswerForm(submitData);
+      const { cid } = await fetch("/api/submission", {
+        method: "POST",
+        body: JSON.stringify(submitData),
+      }).then((res) => res.json());
 
       // 生成数据哈希
       const dataHash = await generateHash(submitData);
@@ -83,7 +85,7 @@ export const AnswerForm: React.FC<AnswerFormProps> = ({
         router.replace("/");
       }, duration);
     } catch (error) {
-      console.error("提交过程出错：", error);
+      console.dir(error);
     } finally {
       setSending(false);
     }
@@ -133,9 +135,6 @@ export const AnswerForm: React.FC<AnswerFormProps> = ({
         name={formData.name}
       />
       {formData.questions.map((question, index) => {
-        const newQuestion =
-          typeof question === "string" ? JSON.parse(question) : question;
-
         return (
           <CardSelector
             key={index}
@@ -153,7 +152,7 @@ export const AnswerForm: React.FC<AnswerFormProps> = ({
                 }
               }}
               isDisable={isDisable}
-              question={newQuestion}
+              question={question}
             />
           </CardSelector>
         );

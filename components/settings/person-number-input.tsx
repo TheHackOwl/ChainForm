@@ -23,7 +23,7 @@ export const PersonNumberInput: React.FC<PersonNumberInputProps> = ({
       isRequired
       color="primary"
       isDisabled={isDisabled}
-      label="Number of users"
+      label="Number of person"
       placeholder="Enter the number of person"
       type="number"
       value={value}

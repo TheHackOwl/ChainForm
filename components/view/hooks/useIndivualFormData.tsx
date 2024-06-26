@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 
-import { getSubmissionById } from "@/app/actions";
 import { SubmissionType, AnswerFormType } from "@/types";
 
 /**
@@ -54,16 +53,24 @@ export const useIndividualFormData = (
   const fetchSubmissionData = async (cid: string) => {
     setLoading(true); // Set loading state to true
     try {
-      const submissionData = await getSubmissionById(cid);
+      const { data, code } = await fetch(`/api/submission?cid=${cid}`, {
+        method: "GET",
+      }).then((res) => res.json());
 
-      console.log(submissionData, "submissionData");
+      if (code !== 200) {
+        setLoading(false);
+        setCurrentFormData(undefined);
 
-      setCurrentFormData(submissionData);
+        return;
+      }
+      console.log(data, "data");
+
+      setCurrentFormData(data);
 
       setFormDataList((prev) => {
         const updatedFormDataList = [...prev];
 
-        updatedFormDataList[currentIndex - 1] = submissionData;
+        updatedFormDataList[currentIndex - 1] = data;
 
         return updatedFormDataList;
       });

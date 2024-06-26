@@ -75,8 +75,8 @@ export const FormInfoCard: React.FC<FormInfoCardProps> = ({
   return (
     <Card isBlurred className="p-6" shadow="lg">
       <CardHeader className="text-left">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900">
+        <div className="h-36">
+          <h2 className="text-2xl font-bold text-gray-900 line-clamp-3">
             {fromBaseInfo.name}
           </h2>
           <div className="min-h-8	 mt-2 text-sm text-gray-400 break-all	line-clamp-2">

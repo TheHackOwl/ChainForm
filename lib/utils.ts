@@ -1,3 +1,5 @@
+import { createHash } from "crypto";
+
 /**
  * 在指定的索引位置插入元素，并返回一个新的数组。
  *
@@ -62,4 +64,17 @@ export function getFormatNumberRegex(decimalPlaces: number) {
   const regex = new RegExp(regexPattern);
 
   return regex;
+}
+
+/**
+ * hash生成函数
+ * @param obj
+ * @returns
+ */
+export async function generateHash(obj: Object) {
+  const hash = createHash("md5"); // 这里使用 md5 哈希算法
+
+  hash.update(JSON.stringify(obj));
+
+  return hash.digest("hex");
 }

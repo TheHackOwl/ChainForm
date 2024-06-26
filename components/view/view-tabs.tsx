@@ -37,7 +37,13 @@ const ViewTabsWappedComponent: React.FC<ViewTabsProps> = ({ id }) => {
 
       const newFormData: FormDataType = {
         ...data[0],
-        questions: data[0].questions.map((item) => JSON.parse(item)),
+        questions: data[0].questions.map((item) => {
+          try {
+            return JSON.parse(item);
+          } catch (err) {
+            return item;
+          }
+        }),
       };
 
       setFromData(newFormData);

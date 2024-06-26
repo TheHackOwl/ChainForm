@@ -1,5 +1,4 @@
 "use server";
-import { createHash } from "crypto";
 
 import { addJson, getJsonByCid, pingCid } from "@/lib/helia";
 import { FormDataType, AnswerFormType } from "@/types/index";
@@ -35,19 +34,6 @@ export async function saveAnswerForm(form: AnswerFormType): Promise<string> {
   const cid = await addJson<AnswerFormType>(form);
 
   return cid;
-}
-
-/**
- * hash生成函数
- * @param obj
- * @returns
- */
-export async function generateHash(obj: Object) {
-  const hash = createHash("md5"); // 这里使用 md5 哈希算法
-
-  hash.update(JSON.stringify(obj));
-
-  return hash.digest("hex");
 }
 
 /**
