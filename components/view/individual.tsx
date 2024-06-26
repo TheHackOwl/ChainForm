@@ -39,8 +39,12 @@ export const Individual: React.FC<IndividualProps> = ({ submissions }) => {
           formId={currentFormData.originalFormID}
           isDisable={true}
         />
-      ) : (
+      ) : loading ? (
         <Spinner className="mt-16" />
+      ) : (
+        <div className="flex items-center justify-center">
+          Get data is empty
+        </div>
       )}
     </div>
   );

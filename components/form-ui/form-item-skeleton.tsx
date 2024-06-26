@@ -9,9 +9,9 @@ export const FormItemSkeleton = memo(() => {
   return (
     <Card isBlurred className="p-6" shadow="lg">
       <CardHeader className="text-left">
-        <div className="w-full">
-          <Skeleton className="w-1/2 h-6 mb-2 rounded-lg" />
-          <Skeleton className="w-full h-4 mt-2 rounded-lg" />
+        <div className="w-full h-36">
+          <Skeleton className="w-full h-24 mb-2 rounded-lg" />
+          <Skeleton className="w-full h-12 mt-2 rounded-lg" />
         </div>
       </CardHeader>
       <CardBody className="overflow-visible">

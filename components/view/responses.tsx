@@ -25,7 +25,7 @@ export const Responses: React.FC<ResponsesProps> = ({ formId }) => {
   });
 
   // Todo： 加载动画
-  if (!data) return null;
+  if (!data) return <></>;
 
   return (
     <>

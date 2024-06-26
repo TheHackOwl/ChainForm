@@ -125,8 +125,9 @@ export function FormTabs({ templateData, settings }: FormTabsProps) {
       setTimeout(() => {
         router.push("/forms");
       }, 1000);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Publish fail", error);
+      toast.error(error.shortMessage);
     } finally {
       setSending(false);
     }
