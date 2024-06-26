@@ -125,8 +125,8 @@ export function FormTabs({ templateData, settings }: FormTabsProps) {
       setTimeout(() => {
         router.push("/forms");
       }, 1000);
-    } catch (error: any) {
-      toast.error(error.shortMessage);
+    } catch (error) {
+      console.error("Publish fail", error);
     } finally {
       setSending(false);
     }
@@ -141,7 +141,7 @@ export function FormTabs({ templateData, settings }: FormTabsProps) {
       abi: MY_TOKNE_ABI,
       address: MY_TOKNE_ADDRESS,
       functionName: APPROVE,
-      gasPrice: parseGwei("10"),
+      gasPrice: parseGwei("0.06"),
       args: [CHAINFORM_ADDRESS, amount],
     });
 
