@@ -18,38 +18,22 @@ export const POST = async (req: NextRequest): Promise<NextResponse> => {
 };
 
 export const GET = async (req: NextRequest): Promise<NextResponse> => {
-  // 设置超时时间为5秒
-  const timeout = 5000;
+  try {
+    const { searchParams } = req.nextUrl;
+    const cid = searchParams.get("cid");
 
-  return new Promise((resolve) => {
-    const timer = setTimeout(() => {
-      resolve(NextResponse.json({ error: "Request Timeout", code: 408 }));
-    }, timeout);
+    console.log("CID: ", cid);
 
-    (async () => {
-      try {
-        const { searchParams } = req.nextUrl;
-        const cid = searchParams.get("cid");
+    if (!cid) {
+      return NextResponse.json({ error: "cid is required", code: 500 });
+    }
 
-        console.log("CID: ", cid);
+    const formData = await getJsonByCid<AnswerFormType>(cid);
 
-        if (!cid) {
-          clearTimeout(timer); // 清除超时计时器
-          resolve(NextResponse.json({ error: "cid is required", code: 500 }));
+    return NextResponse.json({ data: formData, code: 200 });
+  } catch (error) {
+    console.log(error);
 
-          return;
-        }
-
-        const formData = await getJsonByCid<AnswerFormType>(cid);
-
-        clearTimeout(timer); // 清除超时计时器
-        resolve(NextResponse.json({ data: formData, code: 200 }));
-      } catch (error) {
-        clearTimeout(timer); // 确保在捕获错误时也清除计时器
-
-        console.log(error);
-        resolve(NextResponse.json({ msg: error, code: 500 }));
-      }
-    })();
-  });
+    return NextResponse.json({ msg: error, code: 500 });
+  }
 };

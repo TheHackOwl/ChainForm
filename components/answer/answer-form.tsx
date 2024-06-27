@@ -10,7 +10,7 @@ import { AnswerFirstCard } from "@/components/answer/answer-first-card";
 import { AnserCard } from "@/components/answer/answer-card";
 import { FormDataType, Question, AnswerFormType } from "@/types";
 import { generateHash } from "@/lib/utils";
-import { addJson, pingCid } from "@/lib/helia";
+import { addJson } from "@/lib/helia";
 import {
   CHAINFORM_ABI,
   CHAINFORM_ADDRESS,
@@ -74,7 +74,6 @@ export const AnswerForm: React.FC<AnswerFormProps> = ({
       // }).then((res) => res.json());
       const cid = await addJson<AnswerFormType>(submitData);
 
-      pingCid(cid);
       // 生成数据哈希
       const dataHash = await generateHash(submitData);
 

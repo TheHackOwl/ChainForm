@@ -26,7 +26,7 @@ export const HomeForms: React.FC<HomeFormsProps> = () => {
   const publicClient = usePublicClient();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [formIds, setFormIds] = useState<bigint[]>([]);
-  const [idDisable, setIsDisable] = useState<boolean>(false);
+  const [disableds, setDisableds] = useState<boolean[]>([]);
 
   useEffect(() => {
     getFormsId();
@@ -53,8 +53,14 @@ export const HomeForms: React.FC<HomeFormsProps> = () => {
     setIsLoading(false);
   };
 
-  const changeDisable = (val: boolean) => {
-    setIsDisable(val);
+  const changeDisable = (val: boolean, index: number) => {
+    setDisableds((prev) => {
+      const newList = [...prev];
+
+      newList[index] = val;
+
+      return newList;
+    });
   };
 
   const toAnswer = (id: string): void => {
@@ -68,11 +74,17 @@ export const HomeForms: React.FC<HomeFormsProps> = () => {
   return (
     <FormsLayout>
       {formIds.map((item, index) => (
-        <FormInfoCard key={index} changeDisable={changeDisable} id={item}>
+        <FormInfoCard
+          key={index}
+          changeDisable={(val) => {
+            changeDisable(val, index);
+          }}
+          id={item}
+        >
           <CardFooter className="gap-8">
             <ShareButton
               className="flex-1"
-              isDisabled={idDisable}
+              isDisabled={disableds[index]}
               onClick={() => {
                 shareFn(item.toString());
               }}
@@ -80,7 +92,7 @@ export const HomeForms: React.FC<HomeFormsProps> = () => {
             <Button
               className="flex-1"
               color="primary"
-              isDisabled={idDisable}
+              isDisabled={disableds[index]}
               startContent={<FillOutIcon />}
               onClick={() => {
                 toAnswer(item.toString());
