@@ -1,74 +1,102 @@
 "use client";
-import React, { useState, useCallback } from "react";
 
-// 定义验证函数的类型
-type Validator = () => boolean;
+import { Card, CardBody, CardHeader, CardFooter } from "@nextui-org/card";
+import { Input } from "@nextui-org/input";
+import { Button } from "@nextui-org/button";
+import { useState } from "react";
 
-// 自定义 hook 类型
-interface UseValidationHook {
-  register: (id: string, validator: Validator) => void;
-  validateAll: () => boolean[];
-}
-
-function useValidation(): UseValidationHook {
-  const validators = React.useRef<{ [key: string]: Validator }>({});
-
-  const register = useCallback((id: string, validator: Validator) => {
-    console.log(id, "id");
-
-    validators.current[id] = validator;
-  }, []);
-
-  const validateAll = useCallback(() => {
-    const results: boolean[] = [];
-
-    Object.keys(validators.current).forEach((id) => {
-      results.push(validators.current[id]());
-    });
-
-    return results;
-  }, []);
-
-  return { register, validateAll };
-}
+import { cardGap } from "@/components/primitives";
 
 const Parent: React.FC = () => {
-  const { register, validateAll } = useValidation();
-
-  const handleValidate = () => {
-    const results = validateAll();
-
-    console.log("Validation Results:", results);
-  };
-
   return (
-    <div>
-      <Child id="child1" register={register} />
-      <Child id="child2" register={register} />
-      <button onClick={handleValidate}>Validate All</button>
+    <div className={cardGap()}>
+      <OrdinaryAPI />
+      <IpfsAPI />
     </div>
   );
 };
 
-interface ChildProps {
-  id: string;
-  register: (id: string, validator: Validator) => void;
-}
+const OrdinaryAPI = () => {
+  const [value, setValue] = useState("");
+  const [output, setOutput] = useState("");
 
-const Child: React.FC<ChildProps> = ({ id, register }) => {
-  const [value, setValue] = useState<string>("");
-  const validator = () => {
-    console.log(value, "value");
+  const hanldPost = async () => {
+    const res = await fetch("/api/test", {
+      method: "POST",
+      body: JSON.stringify({
+        data: value,
+      }),
+    }).then((res) => res.json());
 
-    return value.length > 0;
+    setOutput(JSON.stringify(res));
   };
 
-  register(id, validator);
+  const handleGet = async () => {
+    const res = await fetch(`/api/test?id=${value}`, {
+      method: "get",
+    }).then((res) => res.json());
+
+    setOutput(JSON.stringify(res));
+  };
 
   return (
-    <div>
-      <input value={value} onChange={(e) => setValue(e.target.value)} />
-    </div>
+    <Card>
+      <CardHeader>普通接口</CardHeader>
+      <CardBody>
+        <Input value={value} onValueChange={setValue} />
+        <div className="h-32 w32 border-spacing-1">{output}</div>
+      </CardBody>
+      <CardFooter>
+        <Button color="primary" onClick={hanldPost}>
+          POST
+        </Button>
+        <Button color="primary" onClick={handleGet}>
+          GET
+        </Button>
+      </CardFooter>
+    </Card>
+  );
+};
+
+const IpfsAPI = () => {
+  const [value, setValue] = useState("");
+  const [output, setOutput] = useState("");
+
+  const hanldPost = async () => {
+    const res = await fetch("/api/submission", {
+      method: "POST",
+      body: JSON.stringify({
+        data: value,
+      }),
+    }).then((res) => res.json());
+
+    setOutput(JSON.stringify(res));
+  };
+
+  const handleGet = async () => {
+    const res = await fetch(`/api/submission?cid=${value}`, {
+      method: "get",
+    }).then((res) => res.json());
+
+    setOutput(JSON.stringify(res));
+  };
+
+  return (
+    <Card>
+      <CardHeader>IPFS接口</CardHeader>
+      <CardBody>
+        <Input value={value} onValueChange={setValue} />
+        <div className="h-32 w32 border-spacing-1">{output}</div>
+      </CardBody>
+      <CardFooter>
+        <Button color="primary" onClick={hanldPost}>
+          POST
+        </Button>
+        <Button color="primary" onClick={handleGet}>
+          GET
+        </Button>
+      </CardFooter>
+    </Card>
   );
 };
 

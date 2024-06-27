@@ -33,8 +33,6 @@ const ViewTabsWappedComponent: React.FC<ViewTabsProps> = ({ id }) => {
 
   useEffect(() => {
     if (data) {
-      console.log(data, "view-data");
-
       const newFormData: FormDataType = {
         ...data[0],
         questions: data[0].questions.map((item) => {

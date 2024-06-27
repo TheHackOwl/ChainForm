@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { verifiedFetch } from "@helia/verified-fetch";
+import { useState, useEffect } from "react";
 
+import { getJsonByCid } from "@/lib/helia";
 import { SubmissionType, AnswerFormType } from "@/types";
 
 /**
@@ -53,8 +53,6 @@ export const useIndividualFormData = (
    * @param {string} cid - The CID of the submission to fetch. 要获取的提交的CID。
    */
   const fetchSubmissionData = async (cid: string) => {
-    console.log(cid, "cid");
-
     setLoading(true); // Set loading state to true
     try {
       // const { data, code } = await fetch(`/api/submission?cid=${cid}`, {
@@ -69,7 +67,7 @@ export const useIndividualFormData = (
       // }
       const data = await fetchDataByCid(cid);
 
-      console.log(data, "data");
+      console.log(data, "from-data");
 
       if (!data) {
         setLoading(false);
@@ -77,8 +75,6 @@ export const useIndividualFormData = (
 
         return;
       }
-
-      console.log(data, "data");
 
       setCurrentFormData(data);
 
@@ -96,20 +92,13 @@ export const useIndividualFormData = (
     }
   };
 
-  const fetchDataByCid = async (cid: string) => {
+  const fetchDataByCid = async (
+    cid: string
+  ): Promise<AnswerFormType | null> => {
     try {
-      controller?.abort();
-      const ctl = new AbortController();
+      const res = await getJsonByCid<AnswerFormType>(cid);
 
-      setController(ctl);
-      const resp = await verifiedFetch(`ipfs://${cid}`, {
-        signal: ctl.signal,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      return await resp.json();
+      return res;
     } catch (error) {
       return null;
     }

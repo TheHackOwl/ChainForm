@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React from "react";
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
 import { Spacer } from "@nextui-org/spacer";
@@ -13,50 +13,41 @@ interface SurveyNavigatorProps {
 export const SurveyNavigator: React.FC<SurveyNavigatorProps> = ({
   totalSurveys,
   initialSurvey = 1,
-  onSurveyChange,
+  onSurveyChange = (val: number) => {},
 }) => {
-  // 当前问卷编号的状态
-  const [currentSurvey, setCurrentSurvey] = useState<number>(initialSurvey);
-
-  // 当 currentSurvey 变化时，调用 onSurveyChange 回调函数
-  useEffect(() => {
-    if (onSurveyChange) {
-      onSurveyChange(currentSurvey);
-    }
-  }, [currentSurvey, onSurveyChange]);
-
   // 处理输入框的变化，确保输入的是合法的问卷编号
-  const handleInputChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      const value = parseInt(event.target.value, 10);
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseInt(event.target.value, 10);
 
-      if (!isNaN(value) && value > 0 && value <= totalSurveys) {
-        setCurrentSurvey(value);
-      }
-    },
-    [totalSurveys]
-  );
+    if (!isNaN(value) && value > 0 && value <= totalSurveys) {
+      onSurveyChange(value);
+    }
+  };
 
   // 处理“上一个”按钮点击事件，确保当前问卷编号在有效范围内
-  const handlePrevClick = useCallback(() => {
-    if (currentSurvey > 1) {
-      setCurrentSurvey((prevSurvey) => prevSurvey - 1);
+  const handlePrevClick = () => {
+    if (initialSurvey > 1) {
+      const surver = initialSurvey - 1;
+
+      onSurveyChange(surver);
     }
-  }, [currentSurvey]);
+  };
 
   // 处理“下一个”按钮点击事件，确保当前问卷编号在有效范围内
-  const handleNextClick = useCallback(() => {
-    if (currentSurvey < totalSurveys) {
-      setCurrentSurvey((prevSurvey) => prevSurvey + 1);
+  const handleNextClick = () => {
+    if (initialSurvey < totalSurveys) {
+      const surver = initialSurvey + 1;
+
+      onSurveyChange(surver);
     }
-  }, [currentSurvey, totalSurveys]);
+  };
 
   return (
     <div className="flex items-center justify-center">
       <Button
         isIconOnly
         color="primary"
-        disabled={currentSurvey === 1}
+        disabled={initialSurvey === 1}
         variant="light"
         onPress={handlePrevClick}
       >
@@ -69,7 +60,7 @@ export const SurveyNavigator: React.FC<SurveyNavigatorProps> = ({
           className="w-14"
           color="primary"
           type="number"
-          value={currentSurvey.toString()} // 将 number 转换为 string
+          value={initialSurvey.toString()} // 将 number 转换为 string
           variant="underlined"
           onChange={handleInputChange}
         />
@@ -79,7 +70,7 @@ export const SurveyNavigator: React.FC<SurveyNavigatorProps> = ({
       <Button
         isIconOnly
         color="primary"
-        disabled={currentSurvey === totalSurveys}
+        disabled={initialSurvey === totalSurveys}
         variant="light"
         onPress={handleNextClick}
       >
