@@ -77,7 +77,7 @@ export const useRewardOptions = (
     });
 
     setRewardOptions(() => {
-      return rewardOptions.map((item, index) => {
+      const options = rewardOptions.map((item, index) => {
         const { name, argsDescription, argsNumber, description } = item.result!;
 
         return {
@@ -88,6 +88,16 @@ export const useRewardOptions = (
           name: name,
         } as RewardOption;
       });
+
+      options.push({
+        address: "0x",
+        argsDescription: [],
+        argsNumber: 0,
+        description: "None",
+        name: "No reward",
+      });
+
+      return options;
     });
 
     if (rewardOptions.length > 0) {

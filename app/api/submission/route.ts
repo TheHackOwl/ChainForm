@@ -1,9 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createHelia } from "helia";
-import { json } from "@helia/json";
-import { CID } from "multiformats/cid";
-import { MemoryBlockstore } from "blockstore-core";
 
+import { addJson, getJsonByCid } from "@/lib/helia";
 import { AnswerFormType } from "@/types/index";
 
 export const POST = async (req: NextRequest): Promise<NextResponse> => {
@@ -12,60 +9,28 @@ export const POST = async (req: NextRequest): Promise<NextResponse> => {
 
     console.log("formData:", body);
 
-    // const cid = await addJson<AnswerFormType>(body);
-    const blockstore = new MemoryBlockstore();
+    const cid = await addJson<AnswerFormType>(body);
 
-    const helia = await createHelia({
-      blockstore,
-    });
-    const j = json(helia);
-
-    const cidObj = await j.add(body);
-
-    return NextResponse.json({ cid: cidObj.toString() });
+    return NextResponse.json({ cid });
   } catch (error) {
     return NextResponse.json({ error });
   }
 };
 
 export const GET = async (req: NextRequest): Promise<NextResponse> => {
-  const timeout = 10000;
-
   try {
     const { searchParams } = req.nextUrl;
-    const cidString = searchParams.get("cid");
+    const cid = searchParams.get("cid");
 
-    console.log("CID: ", cidString);
+    console.log("CID: ", cid);
 
-    if (!cidString) {
+    if (!cid) {
       return NextResponse.json({ error: "cid is required", code: 500 });
     }
 
-    const cid = CID.parse(cidString);
-    const blockstore = new MemoryBlockstore();
+    const formData = await getJsonByCid<AnswerFormType>(cid);
 
-    const helia = await createHelia({
-      blockstore,
-    });
-    const j = json(helia);
-
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => {
-      controller.abort();
-    }, timeout);
-
-    try {
-      const formData = await j.get(cid, {
-        signal: controller.signal,
-      });
-
-      clearTimeout(timeoutId);
-
-      return NextResponse.json({ data: formData, code: 200 });
-    } catch (error) {
-      clearTimeout(timeoutId);
-      throw error;
-    }
+    return NextResponse.json({ data: formData, code: 200 });
   } catch (error) {
     console.log(error);
 
