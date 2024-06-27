@@ -4,11 +4,7 @@ export const CHAINFORM_ABI = [
   {
     type: "constructor",
     inputs: [
-      {
-        name: "_registry",
-        type: "address",
-        internalType: "contract Registry",
-      },
+      { name: "_registry", type: "address", internalType: "contract Registry" },
     ],
     stateMutability: "nonpayable",
   },
@@ -16,11 +12,7 @@ export const CHAINFORM_ABI = [
     type: "function",
     name: "claim",
     inputs: [
-      {
-        name: "token",
-        type: "address",
-        internalType: "contract IERC20",
-      },
+      { name: "token", type: "address", internalType: "contract IERC20" },
     ],
     outputs: [],
     stateMutability: "nonpayable",
@@ -29,21 +21,9 @@ export const CHAINFORM_ABI = [
     type: "function",
     name: "createForm",
     inputs: [
-      {
-        name: "_name",
-        type: "string",
-        internalType: "string",
-      },
-      {
-        name: "_description",
-        type: "string",
-        internalType: "string",
-      },
-      {
-        name: "_questions",
-        type: "string[]",
-        internalType: "string[]",
-      },
+      { name: "_name", type: "string", internalType: "string" },
+      { name: "_description", type: "string", internalType: "string" },
+      { name: "_questions", type: "string[]", internalType: "string[]" },
       {
         name: "_formSettings",
         type: "tuple",
@@ -71,74 +51,30 @@ export const CHAINFORM_ABI = [
             type: "address",
             internalType: "contract IRewardLogic",
           },
-          {
-            name: "expireAt",
-            type: "uint256",
-            internalType: "uint256",
-          },
-          {
-            name: "isPublic",
-            type: "bool",
-            internalType: "bool",
-          },
-          {
-            name: "rsaPublicKey",
-            type: "string",
-            internalType: "string",
-          },
+          { name: "expireAt", type: "uint256", internalType: "uint256" },
+          { name: "isPublic", type: "bool", internalType: "bool" },
+          { name: "rsaPublicKey", type: "string", internalType: "string" },
         ],
       },
     ],
-    outputs: [
-      {
-        name: "formId",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
+    outputs: [{ name: "formId", type: "uint256", internalType: "uint256" }],
     stateMutability: "payable",
   },
   {
     type: "function",
     name: "getForm",
-    inputs: [
-      {
-        name: "_formId",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
+    inputs: [{ name: "_formId", type: "uint256", internalType: "uint256" }],
     outputs: [
       {
         name: "",
         type: "tuple",
         internalType: "struct Form",
         components: [
-          {
-            name: "creator",
-            type: "address",
-            internalType: "address",
-          },
-          {
-            name: "createdAt",
-            type: "uint256",
-            internalType: "uint256",
-          },
-          {
-            name: "name",
-            type: "string",
-            internalType: "string",
-          },
-          {
-            name: "description",
-            type: "string",
-            internalType: "string",
-          },
-          {
-            name: "questions",
-            type: "string[]",
-            internalType: "string[]",
-          },
+          { name: "creator", type: "address", internalType: "address" },
+          { name: "createdAt", type: "uint256", internalType: "uint256" },
+          { name: "name", type: "string", internalType: "string" },
+          { name: "description", type: "string", internalType: "string" },
+          { name: "questions", type: "string[]", internalType: "string[]" },
         ],
       },
       {
@@ -168,21 +104,9 @@ export const CHAINFORM_ABI = [
             type: "address",
             internalType: "contract IRewardLogic",
           },
-          {
-            name: "expireAt",
-            type: "uint256",
-            internalType: "uint256",
-          },
-          {
-            name: "isPublic",
-            type: "bool",
-            internalType: "bool",
-          },
-          {
-            name: "rsaPublicKey",
-            type: "string",
-            internalType: "string",
-          },
+          { name: "expireAt", type: "uint256", internalType: "uint256" },
+          { name: "isPublic", type: "bool", internalType: "bool" },
+          { name: "rsaPublicKey", type: "string", internalType: "string" },
         ],
       },
     ],
@@ -192,16 +116,8 @@ export const CHAINFORM_ABI = [
     type: "function",
     name: "getFormsByPage",
     inputs: [
-      {
-        name: "_page",
-        type: "uint256",
-        internalType: "uint256",
-      },
-      {
-        name: "_perPage",
-        type: "uint256",
-        internalType: "uint256",
-      },
+      { name: "_page", type: "uint256", internalType: "uint256" },
+      { name: "_perPage", type: "uint256", internalType: "uint256" },
     ],
     outputs: [
       {
@@ -209,31 +125,11 @@ export const CHAINFORM_ABI = [
         type: "tuple[]",
         internalType: "struct Form[]",
         components: [
-          {
-            name: "creator",
-            type: "address",
-            internalType: "address",
-          },
-          {
-            name: "createdAt",
-            type: "uint256",
-            internalType: "uint256",
-          },
-          {
-            name: "name",
-            type: "string",
-            internalType: "string",
-          },
-          {
-            name: "description",
-            type: "string",
-            internalType: "string",
-          },
-          {
-            name: "questions",
-            type: "string[]",
-            internalType: "string[]",
-          },
+          { name: "creator", type: "address", internalType: "address" },
+          { name: "createdAt", type: "uint256", internalType: "uint256" },
+          { name: "name", type: "string", internalType: "string" },
+          { name: "description", type: "string", internalType: "string" },
+          { name: "questions", type: "string[]", internalType: "string[]" },
         ],
       },
     ],
@@ -243,70 +139,32 @@ export const CHAINFORM_ABI = [
     type: "function",
     name: "getMyForms",
     inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "uint256[]",
-        internalType: "uint256[]",
-      },
-    ],
+    outputs: [{ name: "", type: "uint256[]", internalType: "uint256[]" }],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "getRewards",
     inputs: [
-      {
-        name: "token",
-        type: "address",
-        internalType: "contract IERC20",
-      },
+      { name: "token", type: "address", internalType: "contract IERC20" },
     ],
-    outputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
+    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "getSubmissions",
-    inputs: [
-      {
-        name: "_formId",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
+    inputs: [{ name: "_formId", type: "uint256", internalType: "uint256" }],
     outputs: [
       {
         name: "",
         type: "tuple[]",
         internalType: "struct Submission[]",
         components: [
-          {
-            name: "dataHash",
-            type: "string",
-            internalType: "string",
-          },
-          {
-            name: "cid",
-            type: "string",
-            internalType: "string",
-          },
-          {
-            name: "submitter",
-            type: "address",
-            internalType: "address",
-          },
-          {
-            name: "submittedAt",
-            type: "uint256",
-            internalType: "uint256",
-          },
+          { name: "dataHash", type: "string", internalType: "string" },
+          { name: "cid", type: "string", internalType: "string" },
+          { name: "submitter", type: "address", internalType: "address" },
+          { name: "submittedAt", type: "uint256", internalType: "uint256" },
         ],
       },
     ],
@@ -316,21 +174,9 @@ export const CHAINFORM_ABI = [
     type: "function",
     name: "getSubmissionsByPage",
     inputs: [
-      {
-        name: "_formId",
-        type: "uint256",
-        internalType: "uint256",
-      },
-      {
-        name: "_page",
-        type: "uint256",
-        internalType: "uint256",
-      },
-      {
-        name: "_perPage",
-        type: "uint256",
-        internalType: "uint256",
-      },
+      { name: "_formId", type: "uint256", internalType: "uint256" },
+      { name: "_page", type: "uint256", internalType: "uint256" },
+      { name: "_perPage", type: "uint256", internalType: "uint256" },
     ],
     outputs: [
       {
@@ -338,26 +184,10 @@ export const CHAINFORM_ABI = [
         type: "tuple[]",
         internalType: "struct Submission[]",
         components: [
-          {
-            name: "dataHash",
-            type: "string",
-            internalType: "string",
-          },
-          {
-            name: "cid",
-            type: "string",
-            internalType: "string",
-          },
-          {
-            name: "submitter",
-            type: "address",
-            internalType: "address",
-          },
-          {
-            name: "submittedAt",
-            type: "uint256",
-            internalType: "uint256",
-          },
+          { name: "dataHash", type: "string", internalType: "string" },
+          { name: "cid", type: "string", internalType: "string" },
+          { name: "submitter", type: "address", internalType: "address" },
+          { name: "submittedAt", type: "uint256", internalType: "uint256" },
         ],
       },
     ],
@@ -366,48 +196,20 @@ export const CHAINFORM_ABI = [
   {
     type: "function",
     name: "hasUserSubmitted",
-    inputs: [
-      {
-        name: "_formId",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
-    outputs: [
-      {
-        name: "",
-        type: "bool",
-        internalType: "bool",
-      },
-    ],
+    inputs: [{ name: "_formId", type: "uint256", internalType: "uint256" }],
+    outputs: [{ name: "", type: "bool", internalType: "bool" }],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "submitForm",
     inputs: [
-      {
-        name: "_formId",
-        type: "uint256",
-        internalType: "uint256",
-      },
-      {
-        name: "_dataHash",
-        type: "string",
-        internalType: "string",
-      },
-      {
-        name: "_cid",
-        type: "string",
-        internalType: "string",
-      },
+      { name: "_formId", type: "uint256", internalType: "uint256" },
+      { name: "_dataHash", type: "string", internalType: "string" },
+      { name: "_cid", type: "string", internalType: "string" },
     ],
     outputs: [
-      {
-        name: "submissionId",
-        type: "uint256",
-        internalType: "uint256",
-      },
+      { name: "submissionId", type: "uint256", internalType: "uint256" },
     ],
     stateMutability: "nonpayable",
   },
@@ -427,12 +229,7 @@ export const CHAINFORM_ABI = [
         indexed: true,
         internalType: "address",
       },
-      {
-        name: "isPublic",
-        type: "bool",
-        indexed: true,
-        internalType: "bool",
-      },
+      { name: "isPublic", type: "bool", indexed: true, internalType: "bool" },
       {
         name: "timestamp",
         type: "uint256",
@@ -452,16 +249,11 @@ export const CHAINFORM_ABI = [
         indexed: true,
         internalType: "uint8",
       },
-      {
-        name: "user",
-        type: "address",
-        indexed: true,
-        internalType: "address",
-      },
+      { name: "user", type: "address", indexed: true, internalType: "address" },
       {
         name: "token",
         type: "address",
-        indexed: false,
+        indexed: true,
         internalType: "contract IERC20",
       },
       {
@@ -488,39 +280,17 @@ export const CHAINFORM_ABI = [
   {
     type: "error",
     name: "AddressEmptyCode",
-    inputs: [
-      {
-        name: "target",
-        type: "address",
-        internalType: "address",
-      },
-    ],
+    inputs: [{ name: "target", type: "address", internalType: "address" }],
   },
   {
     type: "error",
     name: "AddressInsufficientBalance",
-    inputs: [
-      {
-        name: "account",
-        type: "address",
-        internalType: "address",
-      },
-    ],
+    inputs: [{ name: "account", type: "address", internalType: "address" }],
   },
-  {
-    type: "error",
-    name: "FailedInnerCall",
-    inputs: [],
-  },
+  { type: "error", name: "FailedInnerCall", inputs: [] },
   {
     type: "error",
     name: "SafeERC20FailedOperation",
-    inputs: [
-      {
-        name: "token",
-        type: "address",
-        internalType: "address",
-      },
-    ],
+    inputs: [{ name: "token", type: "address", internalType: "address" }],
   },
 ] as const;

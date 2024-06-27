@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useReadContract, useWriteContract } from "wagmi";
+import { useReadContract, useWriteContract, useAccount } from "wagmi";
 import { formatEther } from "viem";
 import { Button } from "@nextui-org/button";
 import { toast } from "react-hot-toast";
@@ -12,10 +12,12 @@ import { MY_TOKNE_ADDRESS } from "@/constants/contract/myToken";
 interface RewardBalanceProps {}
 
 export const RewardBalance: React.FC<RewardBalanceProps> = () => {
+  const { address } = useAccount();
   const { writeContractAsync } = useWriteContract();
   const { data, isLoading } = useReadContract({
     address: CHAINFORM_ADDRESS,
     abi: CHAINFORM_ABI,
+    account: address,
     functionName: "getRewards",
     args: [MY_TOKNE_ADDRESS],
   });
