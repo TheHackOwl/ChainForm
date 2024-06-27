@@ -1,7 +1,7 @@
 import { createHelia, Helia } from "helia";
 import { json, type JSON } from "@helia/json";
 import { CID } from "multiformats/cid";
-
+import { MemoryBlockstore } from "blockstore-core";
 type HeliaJSON = JSON;
 
 /**
@@ -11,7 +11,11 @@ export const createHeliaSingleton = (() => {
   let instance: Helia;
 
   async function createInstance() {
-    const helia: Helia = await createHelia();
+    const blockstore = new MemoryBlockstore();
+
+    const helia: Helia = await createHelia({
+      blockstore,
+    });
 
     return helia;
   }
