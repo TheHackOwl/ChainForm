@@ -10,6 +10,7 @@
 	},
 	"dependencies": {
 		"@helia/json": "^3.0.4",
+		"@helia/verified-fetch": "^1.5.0",
 		"@internationalized/date": "^3.5.4",
 		"@nextui-org/avatar": "^2.0.30",
 		"@nextui-org/button": "2.0.33",

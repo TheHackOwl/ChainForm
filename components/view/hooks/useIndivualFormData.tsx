@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { verifiedFetch } from "@helia/verified-fetch";
 
 import { SubmissionType, AnswerFormType } from "@/types";
 
@@ -22,6 +23,7 @@ export const useIndividualFormData = (
     AnswerFormType | undefined
   >();
   const [loading, setLoading] = useState<boolean>(false);
+  const [controller, setController] = useState<AbortController | null>(null);
 
   useEffect(() => {
     if (submissions.length === 0) return;
@@ -51,18 +53,31 @@ export const useIndividualFormData = (
    * @param {string} cid - The CID of the submission to fetch. 要获取的提交的CID。
    */
   const fetchSubmissionData = async (cid: string) => {
+    console.log(cid, "cid");
+
     setLoading(true); // Set loading state to true
     try {
-      const { data, code } = await fetch(`/api/submission?cid=${cid}`, {
-        method: "GET",
-      }).then((res) => res.json());
+      // const { data, code } = await fetch(`/api/submission?cid=${cid}`, {
+      //   method: "GET",
+      // }).then((res) => res.json());
 
-      if (code !== 200) {
+      // if (code !== 200) {
+      //   setLoading(false);
+      //   setCurrentFormData(undefined);
+
+      //   return;
+      // }
+      const data = await fetchDataByCid(cid);
+
+      console.log(data, "data");
+
+      if (!data) {
         setLoading(false);
         setCurrentFormData(undefined);
 
         return;
       }
+
       console.log(data, "data");
 
       setCurrentFormData(data);
@@ -78,6 +93,25 @@ export const useIndividualFormData = (
       console.error("getSubmissionById错误", error);
     } finally {
       setLoading(false); // Set loading state to false
+    }
+  };
+
+  const fetchDataByCid = async (cid: string) => {
+    try {
+      controller?.abort();
+      const ctl = new AbortController();
+
+      setController(ctl);
+      const resp = await verifiedFetch(`ipfs://${cid}`, {
+        signal: ctl.signal,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      return await resp.json();
+    } catch (error) {
+      return null;
     }
   };
 
