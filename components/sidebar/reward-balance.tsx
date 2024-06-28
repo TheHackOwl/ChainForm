@@ -105,7 +105,7 @@ export const RewardBalance: React.FC<RewardBalanceProps> = ({ onRefetch }) => {
         variant="shadow"
         onClick={handleRewardClick}
       >
-        Reward
+        Claim
       </Button>
     </div>
   );
