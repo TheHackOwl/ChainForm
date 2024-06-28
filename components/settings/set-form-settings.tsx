@@ -57,6 +57,9 @@ export const SetFormSettings: React.FC<SetFormSettingsProps> = ({
     date: ZonedDateTime
   ): true | ValidationError | null | undefined => {
     if (idDisabled) return true;
+    if (date == null) {
+      return ["Invalid date！"];
+    }
 
     const localTimeZone = getLocalTimeZone();
     const currentDateTime = now(localTimeZone);
@@ -74,7 +77,9 @@ export const SetFormSettings: React.FC<SetFormSettingsProps> = ({
 
   const handleChange = (zonedDateTime: ZonedDateTime) => {
     setDeadline(zonedDateTime);
-    setExpireAt(zonedDateTime.toDate().getTime());
+    if (zonedDateTime && zonedDateTime.toDate) {
+      setExpireAt(zonedDateTime.toDate().getTime());
+    }
   };
 
   return (

@@ -63,7 +63,7 @@ const IpfsAPI = () => {
   const [output, setOutput] = useState("");
 
   const hanldPost = async () => {
-    const res = await fetch("/api/submission", {
+    const res = await fetch("/api/upload", {
       method: "POST",
       body: JSON.stringify({
         data: value,

@@ -10,7 +10,6 @@ import { AnswerFirstCard } from "@/components/answer/answer-first-card";
 import { AnserCard } from "@/components/answer/answer-card";
 import { FormDataType, Question, AnswerFormType } from "@/types";
 import { generateHash } from "@/lib/utils";
-import { addJson } from "@/lib/helia";
 import {
   CHAINFORM_ABI,
   CHAINFORM_ADDRESS,
@@ -52,6 +51,8 @@ export const AnswerForm: React.FC<AnswerFormProps> = ({
 
   const handleSubmit = async () => {
     setSending(true);
+    let uploadCid = null;
+
     try {
       // 校验表单
       if (!checkAllComponentsStatus()) {
@@ -65,14 +66,16 @@ export const AnswerForm: React.FC<AnswerFormProps> = ({
       // 获取提交数据
       const submitData = getSubmitData();
 
-      // const { cid } = await fetch("/api/submission", {
-      //   headers: {
-      //     "content-type": "application/json", // 改为 application/json
-      //   },
-      //   method: "POST",
-      //   body: JSON.stringify(submitData),
-      // }).then((res) => res.json());
-      const cid = await addJson<AnswerFormType>(submitData);
+      const { cid } = await fetch("/api/upload", {
+        headers: {
+          "content-type": "application/json", // 改为 application/json
+        },
+        method: "POST",
+        body: JSON.stringify(submitData),
+      }).then((res) => res.json());
+
+      uploadCid = cid;
+      // const cid = await addJson<AnswerFormType>(submitData);
 
       // 生成数据哈希
       const dataHash = await generateHash(submitData);
@@ -90,7 +93,11 @@ export const AnswerForm: React.FC<AnswerFormProps> = ({
         router.replace("/");
       }, duration);
     } catch (error) {
+      if (uploadCid) {
+        fetch(`/api/unpin?cid=${uploadCid}`);
+      }
       console.dir(error);
+      toast.error((error as Error).message);
     } finally {
       setSending(false);
     }

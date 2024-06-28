@@ -59,7 +59,7 @@ export const useRewardOptions = (
   }, [selectedRewardType]);
 
   const setSelectedRewardTypeProxy = (val: RewardArgsNumberType) => {
-    if (!val) return;
+    if (val == undefined || val == null) return;
     setSelectedRewardType(val);
   };
 
