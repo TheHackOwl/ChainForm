@@ -1,6 +1,12 @@
 import React, { useState, useMemo, useEffect } from "react";
-import { useReadContract, useWriteContract, useAccount } from "wagmi";
+import {
+  useReadContract,
+  useWriteContract,
+  useAccount,
+  useConfig,
+} from "wagmi";
 import { formatEther } from "viem";
+import { waitForTransactionReceipt } from "@wagmi/core";
 import { Button } from "@nextui-org/button";
 import { toast } from "react-hot-toast";
 
@@ -10,16 +16,19 @@ import {
   CHAINFORM_ABI,
 } from "@/constants/contract/chainForm";
 import { MY_TOKNE_ADDRESS } from "@/constants/contract/myToken";
-interface RewardBalanceProps {}
+interface RewardBalanceProps {
+  onRefetch: () => void;
+}
 const decimalPlaces = 9;
 
-export const RewardBalance: React.FC<RewardBalanceProps> = () => {
+export const RewardBalance: React.FC<RewardBalanceProps> = ({ onRefetch }) => {
+  const config = useConfig();
   const [isClaiming, setIsClaiming] = useState<boolean>(false);
   const { address } = useAccount();
   const { writeContractAsync } = useWriteContract();
   const [balance, setBalance] = useState<string>("0");
 
-  const { data, isLoading } = useReadContract({
+  const { data, isLoading, refetch } = useReadContract({
     address: CHAINFORM_ADDRESS,
     abi: CHAINFORM_ABI,
     account: address,
@@ -30,6 +39,17 @@ export const RewardBalance: React.FC<RewardBalanceProps> = () => {
   const regex = useMemo(() => {
     return getFormatNumberRegex(decimalPlaces);
   }, [decimalPlaces]);
+
+  useEffect(() => {
+    if (data == undefined) return;
+    const res = formatEther(data!).match(regex);
+
+    if (res) {
+      setBalance(res[1]);
+    } else {
+      setBalance(formatEther(data!));
+    }
+  }, [data]);
 
   const handleRewardClick = async () => {
     if (data == undefined) return;
@@ -42,29 +62,35 @@ export const RewardBalance: React.FC<RewardBalanceProps> = () => {
     setIsClaiming(true);
 
     try {
-      await writeContractAsync({
+      const txHash = await writeContractAsync({
         address: CHAINFORM_ADDRESS,
         abi: CHAINFORM_ABI,
         functionName: "claim",
         args: [MY_TOKNE_ADDRESS],
       });
 
+      await waitForTransaction(txHash);
       toast.success("Reward claimed");
+
+      refetch();
+      onRefetch();
     } finally {
       setIsClaiming(false);
     }
   };
 
-  useEffect(() => {
-    if (data == undefined) return;
-    const res = formatEther(data!).match(regex);
+  /**
+   * 等待交易完成
+   * @param hash
+   * @returns
+   */
+  const waitForTransaction = async (hash: `0x${string}`) => {
+    const transactionReceipt = await waitForTransactionReceipt(config, {
+      hash: hash,
+    });
 
-    if (res) {
-      setBalance(res[1]);
-    } else {
-      setBalance(formatEther(data!));
-    }
-  }, [data]);
+    return transactionReceipt;
+  };
 
   return (
     <div className="mt-4 flex justify-between items-center">
