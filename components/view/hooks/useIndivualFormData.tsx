@@ -15,7 +15,7 @@ import { SubmissionType, AnswerFormType } from "@/types";
  */
 export const useIndividualFormData = (
   submissions: SubmissionType[],
-  initialIndex: number = 1
+  initialIndex: number = 1,
 ) => {
   const [currentIndex, setCurrentIndex] = useState<number>(initialIndex);
   const [formDataList, setFormDataList] = useState<AnswerFormType[]>([]);
@@ -55,9 +55,12 @@ export const useIndividualFormData = (
   const fetchSubmissionData = async (cid: string) => {
     setLoading(true); // Set loading state to true
     try {
-      // const { data, code } = await fetch(`/api/submission?cid=${cid}`, {
-      //   method: "GET",
-      // }).then((res) => res.json());
+      const data = await fetch(
+        `${(process as any).env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`,
+        {
+          method: "GET",
+        },
+      ).then((res) => res.json());
 
       // if (code !== 200) {
       //   setLoading(false);
@@ -65,9 +68,9 @@ export const useIndividualFormData = (
 
       //   return;
       // }
-      const data = await fetchDataByCid(cid);
+      // const data = await fetchDataByCid(cid);
 
-      console.log(data, "from-data");
+      console.log(data, "answer-from-data");
 
       if (!data) {
         setLoading(false);
@@ -93,7 +96,7 @@ export const useIndividualFormData = (
   };
 
   const fetchDataByCid = async (
-    cid: string
+    cid: string,
   ): Promise<AnswerFormType | null> => {
     try {
       const res = await getJsonByCid<AnswerFormType>(cid);

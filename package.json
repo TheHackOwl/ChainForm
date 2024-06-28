@@ -40,6 +40,7 @@
 		"@nextui-org/table": "^2.0.36",
 		"@nextui-org/tabs": "^2.0.31",
 		"@nextui-org/theme": "2.2.5",
+		"@pinata/sdk": "^2.1.0",
 		"@rainbow-me/rainbowkit": "^2.1.2",
 		"@react-aria/ssr": "3.9.4",
 		"@react-aria/visually-hidden": "3.8.12",
