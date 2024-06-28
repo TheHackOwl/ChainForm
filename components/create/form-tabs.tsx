@@ -3,9 +3,8 @@ import React, { useState } from "react";
 import { Tabs, Tab } from "@nextui-org/tabs";
 import { Card, CardBody } from "@nextui-org/card";
 import { Button } from "@nextui-org/button";
-import { useWriteContract, useConfig } from "wagmi";
+import { useWriteContract, useConfig, useGasPrice } from "wagmi";
 import { waitForTransactionReceipt } from "@wagmi/core";
-import { parseGwei } from "viem";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 
@@ -46,6 +45,7 @@ export function FormTabs({ templateData, settings }: FormTabsProps) {
   const { currentTab, toNextStep, toPreviousStep } = useTabsKey();
   const { requireConnect } = useRequireConnect();
   const { writeContractAsync } = useWriteContract();
+  const { data: gasPrice } = useGasPrice();
   const [sending, setSending] = useState(false);
   const {
     refs: questionRefs,
@@ -142,7 +142,7 @@ export function FormTabs({ templateData, settings }: FormTabsProps) {
       abi: MY_TOKNE_ABI,
       address: MY_TOKNE_ADDRESS,
       functionName: APPROVE,
-      gasPrice: parseGwei("0.06"),
+      gasPrice: gasPrice,
       args: [CHAINFORM_ADDRESS, amount],
     });
 
