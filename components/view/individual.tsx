@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React from "react";
 import { Card, CardBody } from "@nextui-org/card";
 import { Spinner } from "@nextui-org/spinner";
 
@@ -18,10 +18,6 @@ export const Individual: React.FC<IndividualProps> = ({ submissions }) => {
   const { currentIndex, setIndividualIndex, currentFormData, loading } =
     useIndividualFormData(submissions, 1);
 
-  useEffect(() => {
-    console.log(currentFormData, "currentFormData");
-  }, [currentFormData]);
-
   return (
     <div className={cardGap()}>
       <Card>
@@ -35,6 +31,7 @@ export const Individual: React.FC<IndividualProps> = ({ submissions }) => {
       </Card>
       {!loading && currentFormData ? (
         <AnswerForm
+          key={currentIndex}
           formData={currentFormData}
           formId={currentFormData.originalFormID}
           isDisable={true}
