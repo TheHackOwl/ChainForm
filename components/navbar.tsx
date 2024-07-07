@@ -23,7 +23,7 @@ export const Navbar = () => {
             {/* <Logo /> */}
             <img alt="" className="w-10 h-10" src="/logo.svg" />
             <p className="underline decoration-solid font-extrabold text-inherit  text-xl font-serif">
-              ChainFrom
+              ChainForm
             </p>
           </NextLink>
         </NavbarBrand>
