@@ -6,6 +6,7 @@ import { toast } from "react-hot-toast";
 import { IncentiveSelector } from "./incentive-selector";
 import { PersonNumberInput } from "./person-number-input";
 import { RateInput } from "./rate-input";
+import { TokenSelector } from "./token-selector";
 import { useIntSettings } from "./hooks/useIntSettings";
 import {
   useRewardOptions,
@@ -92,6 +93,7 @@ export const SetFormIncentive: React.FC<SetFormIncentiveProps> = ({
             value={selectedRewardType}
             onChange={setSelectedRewardType}
           />
+          <TokenSelector/>
           <div
             className={clsx("p-1 text-tiny", {
               "text-foreground-400": !disabled,
